@@ -1,0 +1,623 @@
+@-moz-keyframes 
+dothabottomcheck {	0% {
+		height: 0;
+	}
+	100% {
+		height: 10px;
+	}
+}
+@-webkit-keyframes 
+	dothabottomcheck {	0% {
+		height: 0;
+	}
+	100% {
+		height: 10px;
+	}
+}
+@keyframes 
+	dothabottomcheck {	0% {
+		height: 0;
+	}
+	100% {
+		height: 10px;
+	}
+}
+@keyframes 
+dothatopcheck {	0% {
+		height: 0;
+	}
+	50% {
+		height: 0;
+	}
+	100% {
+		height: 20px;
+	}
+}
+@-webkit-keyframes 
+dothatopcheck {	0% {
+		height: 0;
+	}
+	50% {
+		height: 0;
+	}
+	100% {
+		height: 20px;
+	}
+}
+@-moz-keyframes 
+dothatopcheck {	0% {
+		height: 0;
+	}
+	50% {
+		height: 0;
+	}
+	100% {
+		height: 20px;
+	}
+}
+
+input.ox-inputDesactivee { display: none; }
+
+.ox-caseACocher.ox-theme-1 {
+	height: 20px;
+	width: 20px;
+	background-color: transparent;
+	border: 2px solid black;
+	border-radius: 5px;
+	position: relative;
+	display: inline-block;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	-moz-transition: border-color ease 0.2s;
+	-o-transition: border-color ease 0.2s;
+	-webkit-transition: border-color ease 0.2s;
+	transition: border-color ease 0.2s;
+	cursor: pointer;
+}
+
+.ox-caseACocher.ox-theme-1::before,
+.ox-caseACocher.ox-theme-1::after {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	position: absolute;
+	height: 0;
+	width: 2px;
+	background-color: #34b93d;
+	display: inline-block;
+	-moz-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-o-transform-origin: left top;
+	-webkit-transform-origin: left top;
+	transform-origin: left top;
+	border-radius: 5px;
+	content: ' ';
+	-webkit-transition: opacity ease .5;
+	-moz-transition: opacity ease .5;
+	transition: opacity ease .5;
+}
+
+.ox-caseACocher.ox-theme-1::before {
+	top: 11px;
+	left: 9px;
+	-moz-transform: rotate(-135deg);
+	-ms-transform: rotate(-135deg);
+	-o-transform: rotate(-135deg);
+	-webkit-transform: rotate(-135deg);
+	transform: rotate(-135deg);
+}
+
+.ox-caseACocher.ox-theme-1::after {
+	top: 4px;
+	left: 2px;
+	-moz-transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	-webkit-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+}
+
+input[type=checkbox]:checked + .ox-caseACocher.ox-theme-1,
+.ox-caseACocher.ox-theme-1.checked { border-color: #34b93d; }
+
+input[type=checkbox]:checked + .ox-caseACocher.ox-theme-1::after,
+.ox-caseACocher.ox-theme-1.checked::after {
+	height: 50px;
+	-moz-animation: dothabottomcheck 0.2s ease 0s forwards;
+	-o-animation: dothabottomcheck 0.2s ease 0s forwards;
+	-webkit-animation: dothabottomcheck 0.2s ease 0s forwards;
+	animation: dothabottomcheck 0.2s ease 0s forwards;
+}
+
+input[type=checkbox]:checked + .ox-caseACocher.ox-theme-1::before,
+.ox-caseACocher.ox-theme-1.checked::before {
+	height: 120px;
+	box-shadow: 0 0 0 2px white;
+	-moz-animation: dothatopcheck 0.4s ease 0s forwards;
+	-o-animation: dothatopcheck 0.4s ease 0s forwards;
+	-webkit-animation: dothatopcheck 0.4s ease 0s forwards;
+	animation: dothatopcheck 0.4s ease 0s forwards;
+}
+
+.ox-caseACocher.ox-theme-1.ox-cc-desactive,
+.ox-caseACocher.ox-theme-1.ox-cc-desactive:before,
+.ox-caseACocher.ox-theme-1.ox-cc-desactive:after
+{
+	border-color: #808080 !important;
+	cursor: default;
+	/*opacity: 0.5;					TODO à voir*/
+}
+
+.ox-caseACocher.ox-theme-1.ox-cc-desactive:before,
+.ox-caseACocher.ox-theme-1.ox-cc-desactive:after
+{
+	background-color: #808080 !important;
+}
+
+.ox-caseACocher.ox-theme-1.ox-etatIndetermine
+{
+	border: 2px solid #34B93D;
+}
+
+.ox-caseACocher.ox-theme-1.ox-etatIndetermine::before
+{
+	transition: width 0.2s ease 0s;
+	background-color: #34B93D;
+	border-radius: 2px;
+	height: 10px !important;
+	left: 3px;
+	top: 3px;
+	transform: inherit;
+	width: 10px;
+}
+
+.ox-caseACocher.ox-theme-2
+{
+	background: linear-gradient(to bottom, #FCFFF4 0%, #DFE5D7 40%, #B3BEAD 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	box-shadow: 0 1px 1px #FFFFFF inset, 0 1px 3px rgba(0, 0, 0, 0.5);
+	height: 20px;
+	position: relative;
+	width: 20px;
+}
+
+.ox-caseACocher.ox-theme-2 input[type="checkbox"]:checked + label:after
+{
+	opacity: 1;
+}
+
+.ox-caseACocher.ox-theme-2 label
+{
+	background: linear-gradient(to bottom, #222222 0%, #45484D 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 1px 0 #FFFFFF;
+	cursor: pointer;
+	height: 14px;
+	left: 3px;
+	position: absolute;
+	top: 3px;
+	width: 14px;
+}
+
+.ox-caseACocher.ox-theme-2 label:after
+{
+	background: linear-gradient(to bottom, #00BF00 0%, #009400 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	box-shadow: 0 1px 1px #FFFFFF inset, 0 1px 3px rgba(0, 0, 0, 0.5);
+	content: "";
+	height: 12px;
+	left: 1px;
+	opacity: 0;
+	position: absolute;
+	top: 1px;
+	width: 12px;
+}
+
+.ox-caseACocher.ox-theme-2 .ox-etatIndetermine::after
+{
+	opacity: 0.5;
+}
+
+.ox-caseACocher.ox-theme-3
+{
+	background: linear-gradient(to bottom, #FCFFF4 0%, #DFE5D7 40%, #B3BEAD 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	box-shadow: 0 1px 1px #FFFFFF inset, 0 1px 3px rgba(0, 0, 0, 0.5);
+	height: 20px;
+	position: relative;
+	width: 20px;
+}
+
+.ox-caseACocher.ox-theme-3 input[type="checkbox"]:checked + label:after
+{
+	opacity: 1;
+}
+
+.ox-caseACocher.ox-theme-3 label
+{
+	background: linear-gradient(to bottom, #222222 0%, #45484D 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 1px 0 #FFFFFF;
+	cursor: pointer;
+	height: 14px;
+	left: 3px;
+	position: absolute;
+	top: 3px;
+	width: 14px;
+}
+
+.ox-caseACocher.ox-theme-3 label:after
+{
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border-color: #FCFFF4;
+	border-style: none none solid solid;
+	content: "";
+	height: 4px;
+	left: 2px;
+	opacity: 0;
+	position: absolute;
+	top: 2px;
+	transform: rotate(-45deg);
+	width: 7px;
+}
+
+.ox-caseACocher.ox-theme-3 .ox-etatIndetermine::after
+{
+	opacity: 0.5;
+}
+
+.ox-caseACocher.ox-theme-4
+{
+	position: relative;
+	height: 20px;
+	position: relative;
+	width: 20px;
+}
+
+.ox-caseACocher.ox-theme-4 input[type="checkbox"]:checked + label:after
+{
+	opacity: 1;
+}
+
+.ox-caseACocher.ox-theme-4 label
+{
+	background: linear-gradient(to bottom, #222222 0%, #45484D 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border-radius: 4px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 1px 0 rgba(255, 255, 255, 0.4);
+	cursor: pointer;
+	height: 19px;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 19px;
+}
+
+.ox-caseACocher.ox-theme-4 label:after
+{
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border-color: #FCFFF4;
+	border-style: none none solid solid;
+	content: "";
+	height: 5px;
+	left: 4px;
+	opacity: 0;
+	position: absolute;
+	top: 4px;
+	transform: rotate(-45deg);
+	width: 9px;
+}
+
+.ox-caseACocher.ox-theme-4 .ox-etatIndetermine::after
+{
+	opacity: 0.5;
+}
+
+.ox-caseACocher.ox-theme-5 {
+	position: relative;
+	height: 20px;
+	position: relative;
+	width: 20px;
+}
+
+.ox-caseACocher.ox-theme-5 input[type="checkbox"]:checked + label:after
+{
+	opacity: 1;
+}
+
+.ox-caseACocher.ox-theme-5 label
+{
+	background: linear-gradient(to bottom, #FCFFF4 0%, #DFE5D7 40%, #B3BEAD 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border-radius: 4px;
+	box-shadow: 0 1px 1px #FFFFFF inset, 0 1px 3px rgba(0, 0, 0, 0.5);
+	cursor: pointer;
+	height: 19px;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 19px;
+}
+
+.ox-caseACocher.ox-theme-5 label:after
+{
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border-color: #333333;
+	border-style: none none solid solid;
+	content: "";
+	height: 5px;
+	left: 4px;
+	opacity: 0;
+	position: absolute;
+	top: 4px;
+	transform: rotate(-45deg);
+	width: 9px;
+}
+
+.ox-caseACocher.ox-theme-5 .ox-etatIndetermine::after
+{
+	opacity: 0.5;
+}
+
+.ox-caseACocher.ox-theme-6
+{
+	background: none repeat scroll 0 0 #333333;
+	border-radius: 50px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 1px 0 rgba(255, 255, 255, 0.2);
+	height: 30px;
+	position: relative;
+	width: 80px;
+}
+
+.ox-caseACocher.ox-theme-6:after
+{
+	background: none repeat scroll 0 0 #111111;
+	border-radius: 50px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 1px 0 rgba(255, 255, 255, 0.2);
+	content: "";
+	height: 2px;
+	left: 14px;
+	position: absolute;
+	top: 14px;
+	width: 52px;
+}
+
+.ox-caseACocher.ox-theme-6 input[type="checkbox"]:checked + label:after
+{
+	background: none repeat scroll 0 0 #00BF00;
+}
+
+.ox-caseACocher.ox-theme-6 input[type="checkbox"]:checked + label
+{
+	left: 54px;
+}
+
+.ox-caseACocher.ox-theme-6 label {
+	background: linear-gradient(to bottom, #FCFFF4 0%, #DFE5D7 40%, #B3BEAD 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border-radius: 50px;
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.3);
+	cursor: pointer;
+	display: block;
+	height: 22px;
+	left: 4px;
+	position: absolute;
+	top: 4px;
+	transition: all 0.4s ease 0s;
+	width: 22px;
+	z-index: 1;
+}
+
+.ox-caseACocher.ox-theme-6 label:after
+{
+	background: none repeat scroll 0 0 #333333;
+	border-radius: 50px;
+	box-shadow: 0 1px 1px #000000 inset, 0 1px 0 rgba(255, 255, 255, 0.9);
+	content: "";
+	height: 10px;
+	left: 6px;
+	position: absolute;
+	top: 6px;
+	width: 10px;
+}
+
+.ox-caseACocher.ox-theme-6 .ox-etatIndetermine::after
+{
+	opacity: 0.5;
+}
+
+.ox-caseACocher.ox-theme-7
+{
+	background: none repeat scroll 0 0 #333333;
+	border-radius: 50px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 1px 0 rgba(255, 255, 255, 0.2);
+	height: 26px;
+	margin: 20px auto;
+	position: relative;
+	width: 80px;
+}
+
+.ox-caseACocher.ox-theme-7:before
+{
+	color: #00BF00;
+	content: "OUI";
+	font: bold 12px/26px Arial,sans-serif;
+	left: 10px;
+	position: absolute;
+	z-index: 0;
+}
+
+.ox-caseACocher.ox-theme-7:after
+{
+	color: #000000;
+	content: "NON";
+	font: bold 12px/26px Arial,sans-serif;
+	position: absolute;
+	right: 10px;
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.15);
+	z-index: 0;
+}
+
+.ox-caseACocher.ox-theme-7 input[type="checkbox"]:checked + label
+{
+	left: 43px;
+}
+
+.ox-caseACocher.ox-theme-7 label
+{
+	background: linear-gradient(to bottom, #FCFFF4 0%, #DFE5D7 40%, #B3BEAD 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border-radius: 50px;
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.3);
+	cursor: pointer;
+	display: block;
+	height: 20px;
+	left: 3px;
+	position: absolute;
+	top: 3px;
+	transition: all 0.4s ease 0s;
+	width: 34px;
+	z-index: 1;
+}
+
+.ox-caseACocher.ox-theme-7 .ox-etatIndetermine::after
+{
+	opacity: 0.5;
+}
+
+/****************************************************/
+/*						radio						*/
+/****************************************************/
+
+[type="radio"]:checked,
+[type="radio"]:not(:checked)
+{
+	position: absolute;
+	left: -9999px;
+}
+[type="radio"]:checked + label.ox-boutonRadio.ox-theme-1,
+[type="radio"]:not(:checked) + label.ox-boutonRadio.ox-theme-1
+{
+	position: relative;
+	padding-left: 28px;
+	cursor: pointer;
+	line-height: 20px;
+	display: inline-block;
+	color: #666;
+}
+[type="radio"]:checked + label.ox-boutonRadio.ox-theme-1:before,
+[type="radio"]:not(:checked) + label.ox-boutonRadio.ox-theme-1:before
+{
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 18px;
+	height: 18px;
+	border: 1px solid #ddd;
+	border-radius: 100%;
+	background: #fff;
+}
+[type="radio"]:checked + label.ox-boutonRadio.ox-theme-1:after,
+[type="radio"]:not(:checked) + label.ox-boutonRadio.ox-theme-1:after
+{
+	content: '';
+	width: 12px;
+	height: 12px;
+	background: #F87DA9;
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	border-radius: 100%;
+	-webkit-transition: all 0.2s ease;
+	transition: all 0.2s ease;
+}
+[type="radio"]:not(:checked) + label.ox-boutonRadio.ox-theme-1:after
+{
+	opacity: 0;
+	-webkit-transform: scale(0);
+	transform: scale(0);
+}
+[type="radio"]:checked + label.ox-boutonRadio.ox-theme-1:after
+{
+	opacity: 1;
+	-webkit-transform: scale(1);
+	transform: scale(1);
+}
+
+.ox-boutonRadio.ox-theme-2
+{
+	background: linear-gradient(to bottom, #FCFFF4 0%, #DFE5D7 40%, #B3BEAD 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border-radius: 50px;
+	box-shadow: 0 1px 1px #FFFFFF inset, 0 1px 3px rgba(0, 0, 0, 0.5);
+	height: 20px;
+	position: relative;
+	width: 20px;
+}
+
+.ox-boutonRadio.ox-theme-2 input[type="radio"]:checked + label:after
+{
+	opacity: 1;
+}
+
+.ox-boutonRadio.ox-theme-2 label
+{
+	background: linear-gradient(to bottom, #222222 0%, #45484D 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border-radius: 50px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 1px 0 #FFFFFF;
+	cursor: pointer;
+	height: 14px;
+	left: 3px;
+	position: absolute;
+	top: 3px;
+	width: 14px;
+}
+
+.ox-boutonRadio.ox-theme-2 label:after
+{
+	background: linear-gradient(to bottom, #00BF00 0%, #009400 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border-radius: 50px;
+	box-shadow: 0 1px 1px #FFFFFF inset, 0 1px 3px rgba(0, 0, 0, 0.5);
+	content: "";
+	height: 12px;
+	left: 1px;
+	opacity: 0;
+	position: absolute;
+	top: 1px;
+	width: 12px;
+}
+
+.ox-boutonRadio.ox-theme-3
+{
+	background: linear-gradient(to bottom, #FCFFF4 0%, #DFE5D7 40%, #B3BEAD 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border-radius: 50px;
+	box-shadow: 0 1px 1px #FFFFFF inset, 0 1px 3px rgba(0, 0, 0, 0.5);
+	height: 20px;
+	position: relative;
+	width: 20px;
+}
+
+.ox-boutonRadio.ox-theme-3 input[type="radio"]:checked + label:after
+{
+	opacity: 1;
+}
+
+.ox-boutonRadio.ox-theme-3 label
+{
+	background: linear-gradient(to bottom, #222222 0%, #45484D 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border-radius: 50px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 1px 0 #FFFFFF;
+	cursor: pointer;
+	height: 14px;
+	left: 3px;
+	position: absolute;
+	top: 3px;
+	width: 14px;
+}
+
+.ox-boutonRadio.ox-theme-3 label:after
+{
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border-color: -moz-use-text-color -moz-use-text-color #FCFFF4 #FCFFF4;
+	border-style: none none solid solid;
+	content: "";
+	height: 4px;
+	left: 2px;
+	opacity: 0;
+	position: absolute;
+	top: 2px;
+	transform: rotate(-45deg);
+	width: 7px;
+}

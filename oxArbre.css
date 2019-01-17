@@ -1,0 +1,159 @@
+.ox-contenu
+{
+	-moz-user-select: none;
+	cursor: default;
+	font-family: tahoma;
+	font-size: 15px;
+}
+
+.oxNoeud
+{
+	height: 20px;
+	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	margin-bottom: 2px;
+	transition: background-color 0.2s ease 0s;
+}
+
+.oxTitre
+{
+	display: inline-block;
+	overflow: hidden;
+	padding: 0 5px 0 2px;
+	border-radius: 5px;
+	transition: background-color 0.2s ease 0s;
+}
+
+.oxTitre:hover
+{
+	background-color: #CBE8F6;
+	transition: background-color 0.2s ease 0s;
+}
+
+.ox-etendeur
+{
+	float: left;
+	font-size: 18px;
+	height: 20px;
+	line-height: 20px;
+	text-indent: 4px;
+	width: 20px;
+	margin-right: 5px;
+	visibility: hidden;
+	cursor: pointer;
+}
+
+.ox-animation .ox-etendeur
+{
+	animation: transform 0.5s;
+	transition-duration: 0.5s;
+}
+
+.ox-etendeur:before
+{
+	content: "\e912";
+}
+
+.ox-deploye .ox-etendeur
+{
+	transform: rotate(90deg);
+}
+
+.oxNoeud img
+{
+	height: 20px;
+	width: 20px;
+	margin-right: 5px;
+	float: left;
+}
+
+.oxSvg
+{
+	float: left;
+	height: 20px;
+	width: 20px;
+}
+
+.ox-estSelectionne .oxTitre
+{
+	background-color: #1CA8DD;
+	color: #FFFFFF;
+	transition: background-color 0.5s ease 0s;
+}
+
+.oxNbFils,
+.oxInfoEvt
+{
+	position: relative;
+	background-color: #FFC0CB;
+	border-radius: 5px;
+	float: left;
+	font-size: 8px;
+	text-indent: 0.7px;
+	margin-right: -5px;
+	width: 10px;
+	height: 11px;
+	line-height: 11px;
+	z-index: 2;
+}
+
+.oxInfoEvt
+{
+	background-color: #00BB00;
+	margin-left: -5px;
+	margin-top: 10px;
+	text-indent: 4px;
+}
+
+.oxNbFils.taille1
+{
+	text-indent: 2.8px;
+}
+
+.oxNbFils.taille3
+{
+	width: 12px;
+	height: 12px;
+	font-size: 7px;
+	line-height: 12px;
+	margin-right: -7px;
+}
+
+.oxNbFils.taille4
+{
+	border-radius: 6px;
+	font-size: 7px;
+	height: 15px;
+	line-height: 15px;
+	width: 15px;
+}
+
+.noeudTemporaire
+{
+	border: 1px solid green;
+	height: 18px;
+}
+
+.infoBulle
+{
+	position: fixed;
+	background-color: #1D1F20;
+	color: white;
+	border-radius: 5px;
+	-moz-user-select: none;
+	padding: 2px 5px;
+	display: none;
+	white-space: nowrap;
+	font-family: tahoma;
+	font-size: 15px;
+	box-shadow: 0 0 20px #808080 inset;
+	z-index: 1;
+}
+
+.oxNoeud .ox-caseACocher,
+.oxNoeud .ox-boutonRadio
+{
+	float: left;
+	margin-right: 5px;
+}

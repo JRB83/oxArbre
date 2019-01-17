@@ -1,0 +1,141 @@
+@font-face {
+	font-family: 'etendeur';
+	src: url('etendeur.ttf?6hsyeo') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.ox-etendeur::before {
+/*[class^="ox-"], [class*=" ox-"] {*/
+	font-family: 'etendeur' !important;
+}
+
+.ox-fleche1:before {
+  content: "\e900";
+}
+.ox-fleche2:before {
+  content: "\e901";
+}
+.ox-fleche3:before {
+  content: "\e902";
+}
+.ox-fleche4:before {
+  content: "\e903";
+}
+.ox-fleche5:before {
+  content: "\e904";
+}
+.ox-fleche6:before {
+  content: "\e905";
+}
+.ox-fleche7:before {
+  content: "\e906";
+}
+.ox-fleche8:before {
+  content: "\e907";
+}
+.ox-fleche9:before {
+  content: "\e908";
+}
+.ox-fleche10:before {
+  content: "\e909";
+}
+.ox-fleche11:before {
+  content: "\e90a";
+}
+.ox-fleche12:before {
+  content: "\e90b";
+}
+.ox-fleche13:before {
+  content: "\e90c";
+}
+.ox-fleche14:before {
+  content: "\e90d";
+}
+.ox-fleche15:before {
+  content: "\e90e";
+}
+.ox-fleche16:before {
+  content: "\e90f";
+}
+.ox-fleche17:before {
+  content: "\e910";
+}
+.ox-fleche18:before {
+  content: "\e911";
+}
+.ox-fleche19:before {
+  content: "\e912";
+}
+.ox-fleche20:before {
+  content: "\e913";
+}
+.ox-fleche21:before {
+  content: "\e914";
+}
+.ox-fleche22:before {
+  content: "\e915";
+}
+.ox-fleche23:before {
+  content: "\e916";
+}
+.ox-fleche24:before {
+  content: "\e917";
+}
+.ox-fleche25:before {
+  content: "\e918";
+}
+.ox-fleche26:before {
+  content: "\e919";
+}
+.ox-fleche27:before {
+  content: "\e91a";
+}
+.ox-moins1:before {
+  content: "\e91b";
+}
+.ox-moins2:before {
+  content: "\e91c";
+}
+.ox-moins3:before {
+  content: "\e91d";
+}
+.ox-moins4:before {
+  content: "\e91e";
+}
+.ox-moins5:before {
+  content: "\e91f";
+}
+.ox-moins6:before {
+  content: "\e920";
+}
+.ox-moins7:before {
+  content: "\e921";
+}
+.ox-moins8:before {
+  content: "\e922";
+}
+.ox-plus1:before {
+  content: "\e923";
+}
+.ox-plus2:before {
+  content: "\e924";
+}
+.ox-plus3:before {
+  content: "\e925";
+}
+.ox-plus4:before {
+  content: "\e926";
+}
+.ox-plus5:before {
+  content: "\e927";
+}
+.ox-plus6:before {
+  content: "\e928";
+}
+.ox-plus7:before {
+  content: "\e929";
+}
+.ox-plus8:before {
+  content: "\e92a";
+}
