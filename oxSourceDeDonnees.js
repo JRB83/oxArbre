@@ -428,7 +428,6 @@ function oxSourceDeDonnees (donnees, configuration) {
 	var gestionDesActionsDeSubsomption = new function () {
 		var gdads = this;
 		//var listeDesActionsDeSubsomption = new Array();
-		var listeDesRegroupements = new Array();
 		var criteresDeTri = new Array();
 		var objDonneesInitiales;
 		var donneesInitiales;														// permet de savoir à quel niveau de la source de données se situe le traitement
@@ -454,9 +453,11 @@ function oxSourceDeDonnees (donnees, configuration) {
 
 		function trier (donnees, criteresDeTri) {
 			var donneesClonees = donnees.slice();
+			var groupe = false;
 			donneesClonees.sort(function(a, b) {
 				for (var i = 0 ; i < criteresDeTri.length ; i++) {
 					var nomProp = criteresDeTri[i].nomProp;
+					groupe = criteresDeTri[i].action == "groupe" ? true : groupe;			// permet de savoir s'il y a au moins un groupe
 					var sens = criteresDeTri[i].sens;
 					if (typeof a[nomProp] == "undefined")
 						throw("propriété " + nomProp + " absente");
@@ -477,7 +478,7 @@ function oxSourceDeDonnees (donnees, configuration) {
 				}
 			});
 			donneesTriees = donneesClonees;
-			if (listeDesRegroupements.length){
+			if (groupe){
 				var structure = gdads.creerStructureDonneesAffichables();
 				donneesGroupees = gdads.genererDonneesAffichables(structure.OxFils);
 			}
@@ -489,8 +490,6 @@ function oxSourceDeDonnees (donnees, configuration) {
 			var listeFreres = donneesATraiter ? donneesATraiter[FILS] : donnees;
 			donneesInitiales = listeFreres;
 			derniereAction = "groupe";
-			for (var i = 0; i < listeGroupes.length; i++)
-				listeDesRegroupements.push({ obj: listeGroupes[i], propriete: listePropDeRegroup[i] });
 
 			for (var i = listeGroupes.length - 1; i >= 0; i--)
 				criteresDeTri.unshift({ nomProp: listeGroupes[i][listePropDeRegroup[i]], sens: listeGroupes[i].oxSensTri, action: "groupe" });
@@ -498,14 +497,12 @@ function oxSourceDeDonnees (donnees, configuration) {
 				if (criteresDeTri[i].action == "groupe")
 					criteresDeTri.splice(i, 1);
 
+			donneesTriees = null;
+			donneesGroupees = null;
 			if (criteresDeTri.length)
 				trier(listeFreres, criteresDeTri);
 				//goulag.travailler(configuration.cheminWorker + "OxWorkerTrierDonnees.js", listeFreres, criteresDeTri, gdads.retour);
-			else {
-				donneesTriees = null;
-				donneesGroupees = null;
-				avertirObjAppelant(listeFreres);
-			}
+			avertirObjAppelant(listeFreres);
 		}
 
 		instance.trier = function (donneesATraiter, nomProp, sens, cumul) {
@@ -517,8 +514,12 @@ function oxSourceDeDonnees (donnees, configuration) {
 				if (criteresDeTri[i].nomProp == nomProp)
 					indexTriSiExiste = i;
 
-			if (!cumul && sens)
-				criteresDeTri = [{ nomProp: nomProp, sens: sens, action: "tri" }];
+			if (!cumul && sens){
+				for (var i = 0; i < criteresDeTri.length; i++)
+					if (criteresDeTri[i].action != "groupe")
+						criteresDeTri.splice(i, 1);
+				criteresDeTri.push({ nomProp: nomProp, sens: sens, action: "tri" });
+			}
 			else if (indexTriSiExiste != undefined && sens)
 				criteresDeTri[indexTriSiExiste] = { nomProp: nomProp, sens: sens, action: "tri" };
 			else if (indexTriSiExiste == undefined && sens)
@@ -561,7 +562,7 @@ function oxSourceDeDonnees (donnees, configuration) {
 			donneesInitiales && delete donneesInitiales.oxDonneesAffichees;
 		}
 
-		this.retour = function (travail) {
+		/*this.retour = function (travail) {
 			if (travail.nbBlocksRecus == goulag.getNbTravailleurs()) {
 				travail.listeTravailleur[0].postMessage([travail.blocksDeDonnees, criteresDeTri]);
 				travail.blocksDeDonnees = [];
@@ -576,7 +577,7 @@ function oxSourceDeDonnees (donnees, configuration) {
 				donneesInitiales.oxDonneesAffichees = donneesGroupees || donneesTriees;
 				avertirObjAppelant(donneesGroupees || donneesTriees);
 			}
-		}
+		}*/
 
 		this.getDonneesAAffichees = function (donnees) {
 			if (donneesInitiales == donnees)

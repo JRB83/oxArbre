@@ -41,14 +41,13 @@ function OxArbre ($conteneur, proprietes) {
 		nbElements: null,
 		nomFonction: null,
 		animation: null,
-		reinitialiser: function() {
-			delaiRafPosVue = 0;
-			deportTempAff = null;
-			position = null;
-			indexDebut = null;
-			nbElements = null;
-			nomFonction = null;
-			animation = null;
+		remplir: function (drpv, p, i, ne, nf, a) {
+			this.delaiRafPosVue = drpv;
+			this.position = isNaN(p) ? this.position : p;
+			this.indexDebut = isNaN(i) ? this.indexDebut : i;
+			this.nbElements = ne || this.nbElements;
+			this.nomFonction = nf || this.nomFonction;
+			this.animation = a || this.animation;
 		}
 	};
 
@@ -92,23 +91,13 @@ function OxArbre ($conteneur, proprietes) {
 	}
 
 	function afficherQuandPret(position, indexDebut, nbElements, nomFonction, animation) {
-		decalageTempAff.position = position || decalageTempAff.position;
-		decalageTempAff.indexDebut = indexDebut || decalageTempAff.indexDebut;
-		decalageTempAff.nbElements = nbElements || decalageTempAff.nbElements;
-		decalageTempAff.nomFonction = nomFonction || decalageTempAff.nomFonction;
-		decalageTempAff.animation = animation || decalageTempAff.animation;
-
 		if (new Date().getTime() - decalageTempAff.delaiRafPosVue < 48)
 			clearTimeout(decalageTempAff.deportTempAff);
+
 		decalageTempAff.deportTempAff = setTimeout(function () {
 			afficher(decalageTempAff.position);
-
-			var posFinAAnimer = decalageTempAff.indexDebut + decalageTempAff.nbElements;
-			posFinAAnimer = posFinAAnimer >= nbEltAffiches / 2 ? nbEltAffiches / 2 : posFinAAnimer;
-			animer(decalageTempAff.indexDebut, posFinAAnimer, decalageTempAff.nomFonction, decalageTempAff.animation);
-			decalageTempAff.reinitialiser();
 		}, 50);
-		decalageTempAff.delaiRafPosVue = new Date().getTime();
+		decalageTempAff.remplir(new Date().getTime(), ...arguments);
 	}
 
 	function afficher(position = 0) {
@@ -137,10 +126,13 @@ console.time("aff");
 		objDefilement.setLargeurContenu(OxNoeud.prototype.longueur);
 console.timeEnd("aff");
 
-		var posFinAAnimer = decalageTempAff.indexDebut + decalageTempAff.nbElements;
-		posFinAAnimer = posFinAAnimer >= nbEltAffiches / 2 ? nbEltAffiches / 2 : posFinAAnimer;
-		animer(decalageTempAff.indexDebut, posFinAAnimer, decalageTempAff.nomFonction, decalageTempAff.animation);
-		decalageTempAff.reinitialiser();
+		// gestion de l'animation si besoin
+		if (decalageTempAff.delaiRafPosVue) {
+			var posFinAAnimer = decalageTempAff.indexDebut + decalageTempAff.nbElements;
+			posFinAAnimer = posFinAAnimer >= nbEltAffiches / 2 ? nbEltAffiches / 2 : posFinAAnimer;
+			animer(decalageTempAff.indexDebut, posFinAAnimer, decalageTempAff.nomFonction, decalageTempAff.animation);
+			decalageTempAff.remplir(0);
+		}
 	}
 
 	function animer(debut, fin, action, effet, fonctionRetour) {
@@ -605,7 +597,7 @@ console.timeEnd("aff");
 				}
 				listeElts[i].OxFils && listeElts[i].OxFils.length && nettoyerNoeudSelectionne(listeElts[i].OxFils);
 			}
-		})(donneesNoeud.OxFils || sdd.getElements());
+		})(donneesNoeud ? donneesNoeud.OxFils : sdd.getElements());
 
 		var nbFilsSupprimes = sdd.supprimerFils(donneesNoeud);
 		if (!donneesNoeud || donneesNoeud[ESTDEPLOYE])

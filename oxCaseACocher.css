@@ -358,7 +358,7 @@ input[type=checkbox]:checked + .ox-caseACocher.ox-theme-1::before,
 	background: none repeat scroll 0 0 #333333;
 	border-radius: 50px;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 1px 0 rgba(255, 255, 255, 0.2);
-	height: 30px;
+	height: 26px;
 	position: relative;
 	width: 80px;
 }
@@ -372,7 +372,7 @@ input[type=checkbox]:checked + .ox-caseACocher.ox-theme-1::before,
 	height: 2px;
 	left: 14px;
 	position: absolute;
-	top: 14px;
+	top: 12px;
 	width: 52px;
 }
 
@@ -392,12 +392,12 @@ input[type=checkbox]:checked + .ox-caseACocher.ox-theme-1::before,
 	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.3);
 	cursor: pointer;
 	display: block;
-	height: 22px;
+	height: 18px;
 	left: 4px;
 	position: absolute;
 	top: 4px;
 	transition: all 0.4s ease 0s;
-	width: 22px;
+	width: 18px;
 	z-index: 1;
 }
 
@@ -407,11 +407,11 @@ input[type=checkbox]:checked + .ox-caseACocher.ox-theme-1::before,
 	border-radius: 50px;
 	box-shadow: 0 1px 1px #000000 inset, 0 1px 0 rgba(255, 255, 255, 0.9);
 	content: "";
-	height: 10px;
-	left: 6px;
+	height: 8px;
+	left: 5px;
 	position: absolute;
-	top: 6px;
-	width: 10px;
+	top: 5px;
+	width: 8px;
 }
 
 .ox-caseACocher.ox-theme-6 .ox-etatIndetermine::after
@@ -425,7 +425,6 @@ input[type=checkbox]:checked + .ox-caseACocher.ox-theme-1::before,
 	border-radius: 50px;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 1px 0 rgba(255, 255, 255, 0.2);
 	height: 26px;
-	margin: 20px auto;
 	position: relative;
 	width: 80px;
 }
@@ -473,6 +472,42 @@ input[type=checkbox]:checked + .ox-caseACocher.ox-theme-1::before,
 }
 
 .ox-caseACocher.ox-theme-7 .ox-etatIndetermine::after
+{
+	opacity: 0.5;
+}
+
+.ox-caseACocher.ox-theme-8
+{
+	width: 50px;
+	height: 10px;
+	background: #333;
+	position: relative;
+	border-radius: 50px;
+	box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
+}
+
+.ox-caseACocher.ox-theme-8 input[type="checkbox"]:checked + label
+{
+	left: 43px;
+}
+
+.ox-caseACocher.ox-theme-8 label
+{
+	display: block;
+	width: 16px;
+	height: 16px;
+	position: absolute;
+	top: -3px;
+	left: -3px;
+	cursor: pointer;
+	background: #fcfff4;
+	background: linear-gradient(to bottom, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+	border-radius: 50px;
+	box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+	transition: all 0.4s ease;
+}
+
+.ox-caseACocher.ox-theme-8 .ox-etatIndetermine::after
 {
 	opacity: 0.5;
 }
@@ -610,7 +645,7 @@ input[type=checkbox]:checked + .ox-caseACocher.ox-theme-1::before,
 .ox-boutonRadio.ox-theme-3 label:after
 {
 	background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
-	border-color: -moz-use-text-color -moz-use-text-color #FCFFF4 #FCFFF4;
+	border-color: /*-moz-use-text-color -moz-use-text-color #FCFFF4 */#FCFFF4;
 	border-style: none none solid solid;
 	content: "";
 	height: 4px;

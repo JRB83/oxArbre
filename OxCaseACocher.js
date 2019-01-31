@@ -2,6 +2,7 @@ function OxCaseACocher (element, options) {
 	var instance = this;
 	options = $.extend({}, { mode: OxCaseACocher.prototype.mode.CASEACOCHER, theme: 1 }, options);
 	var etat = options.etat || (element.hasAttribute("checked") ? OxCaseACocher.prototype.etats.COCHE : OxCaseACocher.prototype.etats.DECOCHE);
+	var sauvegardeDIV;
 
 	element.type = options.mode;
 	if (options.estCoche)
@@ -41,10 +42,25 @@ function OxCaseACocher (element, options) {
 			options.indetermine(evt, etat, origine);
 	}
 
+	function remplacerDivParInput () {
+		var nvleBalise = document.createElement('input');
+		for (var attr of element.attributes)
+			nvleBalise.setAttribute(attr.nodeName, attr.nodeValue);
+		nvleBalise.setAttribute("type", "checkbox");
+		sauvegardeDIV = element;
+		element.after(nvleBalise);
+		element.remove();
+		element = nvleBalise;
+	}
+
 	function encapsulerBalise () {
 		var parent = document.createElement('div');
 		var estCoche = element.checked;
 		//parent.className = "ox-caseACocher ox-theme-" + options.theme;
+
+		if (element.nodeName == "DIV")
+			remplacerDivParInput();
+
 		parent.innerHTML = element.outerHTML + label.outerHTML;
 		element.parentNode.insertBefore(parent, element);
 
@@ -56,6 +72,9 @@ function OxCaseACocher (element, options) {
 
 		estCoche && (element.checked = "checked");
 
+		parent.setAttribute("id", element.id);
+		element.id = element.id + 'd';
+		label.attributes.for.value = label.attributes.for.value + 'd';
 		for (var attr of label.attributes)
 			parent.setAttribute(attr.nodeName, attr.nodeValue);
 
@@ -69,11 +88,16 @@ function OxCaseACocher (element, options) {
 		parent.parentNode.insertBefore(element, parent);
 		parent.parentNode.insertBefore(label, parent);
 		parent.removeEventListener("click", arretPropagation);
+		label.removeEventListener("click", arretPropagation);
 
 		for (var attr of parent.attributes)
 			label.setAttribute(attr.nodeName, attr.nodeValue);
 
 		parent.remove();
+	}
+
+	this.getConteneur = function () {
+		return sauvegardeDIV ? $(element).parent() : element;
 	}
 
 	this.cocher = function cocher () {
@@ -157,6 +181,13 @@ function OxCaseACocher (element, options) {
 			decapsulerBalise();
 		element.className = element.className.replace(/ox-inputDesactivee/g, '');
 		label.className = label.className.replace(/ox-caseACocher/g, '').replace(/ox-boutonRadio/g, '').replace(/ox-theme-\d/g, '').replace(/ox-etatIndetermine/g, '').replace(/ox-cc-desactive/g, '');
+	
+		if (sauvegardeDIV) {
+			element.after(sauvegardeDIV);
+			element.remove();
+			sauvegardeDIV.className = sauvegardeDIV.className.replace(/ ?ox-inputDesactivee/g, '');
+			sauvegardeDIV = null;
+		}
 	}
 
 	element.addEventListener("change", function (e) {
