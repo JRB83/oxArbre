@@ -133,7 +133,7 @@ function oxSourceDeDonnees (donnees, configuration) {
 	this.getIndex = function(elt, tenirCompteSubsomption) {
 		var listeFreres = elt[PARENT] ? elt[PARENT][FILS] : donnees;
 		if (tenirCompteSubsomption)
-			sdd.getElements().indexOf(elt);
+			return instance.getElements(elt[PARENT]).indexOf(elt);
 		else
 			return listeFreres.indexOf(elt);
 	}
@@ -184,7 +184,7 @@ function oxSourceDeDonnees (donnees, configuration) {
 			listeElements.push(elt);
 
 		delete donnees.action;
-		delete donnees.oxDonneesAffichees;
+		//delete donnees.oxDonneesAffichees;
 
 		if (configuration && typeof configuration.ajout == "function")
 			configuration.ajout(elt);
@@ -209,8 +209,8 @@ function oxSourceDeDonnees (donnees, configuration) {
 				listeElements.push(listeElts[i]);
 		}
 
-		delete donnees.action;
-		delete donnees.oxDonneesAffichees;
+		//delete donnees.action;
+		//delete donnees.oxDonneesAffichees;
 
 		if (configuration && typeof configuration.ajout == "function")
 			configuration.ajout(listeElements);
@@ -226,8 +226,10 @@ function oxSourceDeDonnees (donnees, configuration) {
 		if (indexEltASupprimer >= 0)
 			listeFreres.splice(instance.getIndex(elt), 1);
 
-		delete donnees.action;
-		delete donnees.oxDonneesAffichees;
+		gestionDesActionsDeSubsomption.supprimerElement(listeFreres, elt);
+
+		//delete donnees.action;
+		//delete donnees.oxDonneesAffichees;
 
 		if (configuration && typeof configuration.suppression == "function")
 			configuration.suppression(elt, indexEltASupprimer);
@@ -244,8 +246,8 @@ function oxSourceDeDonnees (donnees, configuration) {
 		if (eltParent){
 			delete eltParent[FILS];
 
-			delete donnees.action;
-			delete donnees.oxDonneesAffichees;
+			//delete donnees.action;
+			//delete donnees.oxDonneesAffichees;
 		}
 		else
 			donnees = [];
@@ -263,8 +265,8 @@ function oxSourceDeDonnees (donnees, configuration) {
 	this.supprimerElementParIndex = function(parent, index) {
 		var eltSupprime = parent[FILS].splice(index, 1);
 
-		delete donnees.action;
-		delete donnees.oxDonneesAffichees;
+		//delete donnees.action;
+		//delete donnees.oxDonneesAffichees;
 
 		if (configuration && typeof configuration.suppression == "function")
 			configuration.suppression(eltSupprime, indexEltASupprimer);
@@ -429,6 +431,7 @@ function oxSourceDeDonnees (donnees, configuration) {
 		var gdads = this;
 		//var listeDesActionsDeSubsomption = new Array();
 		var criteresDeTri = new Array();
+		var listeFiltres = new Array();
 		var objDonneesInitiales;
 		var donneesInitiales;														// permet de savoir à quel niveau de la source de données se situe le traitement
 		var derniereAction;
@@ -482,8 +485,8 @@ function oxSourceDeDonnees (donnees, configuration) {
 				var structure = gdads.creerStructureDonneesAffichables();
 				donneesGroupees = gdads.genererDonneesAffichables(structure.OxFils);
 			}
-			donneesInitiales.oxDonneesAffichees = donneesGroupees || donneesTriees;
-			avertirObjAppelant(donneesGroupees || donneesTriees);
+			//donneesInitiales.oxDonneesAffichees = donneesGroupees || donneesTriees;
+			//avertirObjAppelant(donneesGroupees || donneesTriees);
 		}
 
 		instance.grouper = function (donneesATraiter, listeGroupes, listePropDeRegroup) {
@@ -502,7 +505,8 @@ function oxSourceDeDonnees (donnees, configuration) {
 			if (criteresDeTri.length)
 				trier(listeFreres, criteresDeTri);
 				//goulag.travailler(configuration.cheminWorker + "OxWorkerTrierDonnees.js", listeFreres, criteresDeTri, gdads.retour);
-			avertirObjAppelant(listeFreres);
+            donneesTriees && instance.filtrer(donneesTriees[PARENT]);
+			avertirObjAppelant(donneesGroupees || donneesFiltrees || donneesTriees || listeFreres);
 		}
 
 		instance.trier = function (donneesATraiter, nomProp, sens, cumul) {
@@ -530,37 +534,82 @@ function oxSourceDeDonnees (donnees, configuration) {
 			if (criteresDeTri.length)
 				trier(listeFreres, criteresDeTri);
 				//goulag.travailler(configuration.cheminWorker + "OxWorkerTrierDonnees.js", listeFreres, criteresDeTri, gdads.retour);
-			else {
+			else
 				donneesTriees = null;
-				avertirObjAppelant(listeFreres);
-			}
+				//delete donneesInitiales.oxDonneesAffichees;
+			avertirObjAppelant(donneesGroupees || donneesFiltrees || donneesTriees || listeFreres);
 		}
 
 		instance.filtrer = function(donneesATraiter, nomProp, critere) {
 			var listeFreres = donneesATraiter ? donneesATraiter[FILS] : donnees;
 			if (!listeFreres)
 				return;
+
+			for (var i = listeFiltres.length - 1 ; i >= 0  ; i--)
+				if (listeFiltres[i].nomProp == nomProp && !critere)
+					listeFiltres.splice(i, 1);
+				else if (listeFiltres[i].nomProp == nomProp) {
+					listeFiltres[i].critere = critere;
+					critere = '';
+				}
+            if (critere && critere.length)
+				listeFiltres.push({ nomProp: nomProp, critere: critere, action: "filtre" });
+
 			donneesInitiales = listeFreres;
 			derniereAction = "filtre";
-			donneesFiltrees = new Array();
-			var regexp = new RegExp(critere, "gi");
-			listeFreres.filter(function(obj) {
-				if (typeof obj[nomProp] == "undefined")
-					throw("propriété " + nomProp + " absente");
-				var test = obj[nomProp].toString().match(regexp);
-				if (test && test.length)
-					donneesFiltrees.push(obj);
-			});
-			donneesInitiales.oxDonneesAffichees = donneesFiltrees;
-			avertirObjAppelant(donneesFiltrees);
+			var donneesATraiter = listeFreres;
+			if (donneesTriees && listeFreres == donneesInitiales)
+			    donneesATraiter = donneesTriees;
+            donneesFiltrees = new Array();
+			for (var i = 0 ; i < listeFiltres.length ; i++) /*for (var nP in listeFiltres[i]) */{
+                var regexp = new RegExp(listeFiltres[i].critere, "gi");
+                donneesFiltrees = new Array();
+                donneesATraiter.filter(function (obj) {
+					if (typeof obj[listeFiltres[i].nomProp] == "undefined")
+						throw("propriété " + listeFiltres[i].nomProp + " absente");
+					var test = obj[listeFiltres[i].nomProp].toString().match(regexp);
+					if (obj[listeFiltres[i].nomProp].constructor.name == "Number" ? obj[listeFiltres[i].nomProp] == listeFiltres[i].critere : test && test.length)
+						donneesFiltrees.push(obj);
+				});
+                donneesATraiter = donneesFiltrees;
+			}
+             if (!listeFiltres.length)
+                 donneesFiltrees = null;
+			if (donneesGroupees) {
+                var structure = gdads.creerStructureDonneesAffichables();
+                donneesGroupees = gdads.genererDonneesAffichables(structure.OxFils);
+			}
+			//donneesInitiales.oxDonneesAffichees = donneesGroupees || donneesFiltrees;
+			avertirObjAppelant(donneesGroupees || donneesFiltrees || donneesTriees || listeFreres);
 		}
 
 		instance.reinitialiserSubsomption = function () {
 			donneesGroupees = null;
 			donneesFiltrees = null;
 			donneesTriees = null;
-			donneesInitiales && delete donneesInitiales.oxDonneesAffichees;
+			//donneesInitiales && delete donneesInitiales.oxDonneesAffichees;
 		}
+
+        this.supprimerElement = function (listeDonnees, elt) {
+            if (instance.estDonneesFiltrees(listeDonnees)) {
+                for (var i = 0; i < donneesFiltrees.length; i++)
+                    if (donneesFiltrees[i] == elt) {
+                        donneesFiltrees.splice(i, 1);
+                        break;
+                    }
+            }
+            if (instance.estDonneesTriees(listeDonnees)) {
+                for (var i = 0; i < donneesTriees.length; i++)
+                    if (donneesTriees[i] == elt) {
+                        donneesTriees.splice(i, 1);
+                        break;
+                    }
+            }
+            if (instance.estDonneesGroupees(listeDonnees)) {
+                var structure = gestionDesActionsDeSubsomption.creerStructureDonneesAffichables();
+                donneesGroupees = gestionDesActionsDeSubsomption.genererDonneesAffichables(structure.OxFils);
+            }
+        }
 
 		/*this.retour = function (travail) {
 			if (travail.nbBlocksRecus == goulag.getNbTravailleurs()) {
@@ -586,8 +635,26 @@ function oxSourceDeDonnees (donnees, configuration) {
 				return donnees;
 		}
 
+        instance.estDonneesFiltrees = function (d) {
+            if (d == donneesInitiales)
+                return donneesFiltrees ? true : false;
+            return false;
+        }
+
+        instance.estDonneesTriees = function (d) {
+            if (d == donneesInitiales)
+                return donneesTriees ? true : false;
+            return false;
+        }
+
+        instance.estDonneesGroupees = function (d) {
+            if (d == donneesInitiales)
+                return donneesGroupees ? true : false;
+            return false;
+        }
+
 		instance.getListeActionsDeSubsomption = function () {
-			return criteresDeTri;
+			return criteresDeTri.concat(listeFiltres);
 		}
 
 		function creerEnteteGroupe (donnee, nomProp, i) {
@@ -627,11 +694,14 @@ function oxSourceDeDonnees (donnees, configuration) {
 			var structureCourante = structureDonneesAffichables;
 			var listeValeurGroupesCourant = new Array();
 
-			for (var i = 0 ; i < donneesTriees.length ; i++) {
-				var donnee = donneesTriees[i];
+			var donneesAStructurer = donneesFiltrees || donneesTriees;
+			for (var i = 0 ; i < donneesAStructurer.length ; i++) {
+				var donnee = donneesAStructurer[i];
 				for (var j = 0 ; j < listeGroupes.length ; j++) {
 					var refGroupe = listeGroupes[j];
-					if (donnee[refGroupe] != listeValeurGroupesCourant[j]){
+					if (listeValeurGroupesCourant[j] == undefined ||
+						donnee[refGroupe].constructor.name == "Date" && donnee[refGroupe].toDateString() != listeValeurGroupesCourant[j].toDateString() ||
+						donnee[refGroupe].constructor.name != "Date" && donnee[refGroupe] != listeValeurGroupesCourant[j]){
 						var enteteGroupe = creerEnteteGroupe(donnee, refGroupe);
 						if (donneesGroupees && rechercherEntetePrecedemmentCree(enteteGroupe, donneesGroupees[0].OxParentGroupe.OxFils).OxDeploye)
 							enteteGroupe.OxDeploye = true;

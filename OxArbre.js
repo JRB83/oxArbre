@@ -1,3 +1,13 @@
+/**
+ * @class OxArbre
+ * @classdesc gestion hiérarchique de données
+ *
+ * @param {jQuery} $conteneur
+ * @param {objet} proprietes
+ *
+ * @property {OxArbre} instance
+ * @property {oxSourceDeDonnees} sdd
+ */
 function OxArbre ($conteneur, proprietes) {
 	var instance = this;
 	var sdd;
@@ -5,7 +15,7 @@ function OxArbre ($conteneur, proprietes) {
 							proprietes);
 	var noeudSelectionne;
 	var noeudsCoches = new Array();
-	
+
 	const TITRE = proprietes.nomProprietes && proprietes.nomProprietes.titre || "titre";
 	const FILS = proprietes.nomProprietes && proprietes.nomProprietes.fils || "OxFils";
 	const IMAGE = proprietes.nomProprietes && proprietes.nomProprietes.image || "image";
@@ -41,6 +51,7 @@ function OxArbre ($conteneur, proprietes) {
 		nbElements: null,
 		nomFonction: null,
 		animation: null,
+		actif: false,
 		remplir: function (drpv, p, i, ne, nf, a) {
 			this.delaiRafPosVue = drpv;
 			this.position = isNaN(p) ? this.position : p;
@@ -107,14 +118,15 @@ function OxArbre ($conteneur, proprietes) {
 		var pos = 0, compt = 0;
 
 		function parcourirListeFils(listeNoeuds) {
-			var listeAParcourir = listeNoeuds.oxDonneesAffichees || listeNoeuds;
+			//var listeAParcourir = listeNoeuds.oxDonneesAffichees || listeNoeuds;
+			var listeAParcourir = sdd.getElements(listeNoeuds && listeNoeuds[0].OxParent ? listeNoeuds[0].OxParent : null);
 			for (var i = 0 ; i < listeAParcourir.length ; i++) {
 				if (pos > position + nbEltAffiches)
 					break;
 				if (pos >= position && compt < listeNoeudsAffiches.length)
 					listeNoeudsAffiches[compt++].setDonnees(listeAParcourir[i]);
 				pos++;
-				if (listeAParcourir[i][FILS] && listeAParcourir[i][ESTDEPLOYE])
+				if (listeAParcourir[i][FILS] && listeAParcourir[i][FILS].length && listeAParcourir[i][ESTDEPLOYE])
 					parcourirListeFils(listeAParcourir[i][FILS]);
 			}
 		}
@@ -127,12 +139,12 @@ console.time("aff");
 console.timeEnd("aff");
 
 		// gestion de l'animation si besoin
-		if (decalageTempAff.delaiRafPosVue) {
+		if (decalageTempAff.actif) {
 			var posFinAAnimer = decalageTempAff.indexDebut + decalageTempAff.nbElements;
 			posFinAAnimer = posFinAAnimer >= nbEltAffiches / 2 ? nbEltAffiches / 2 : posFinAAnimer;
 			animer(decalageTempAff.indexDebut, posFinAAnimer, decalageTempAff.nomFonction, decalageTempAff.animation);
-			decalageTempAff.remplir(0);
 		}
+		decalageTempAff.actif = false;
 	}
 
 	function animer(debut, fin, action, effet, fonctionRetour) {
@@ -140,7 +152,7 @@ console.timeEnd("aff");
 			return;
 		for (var i = debut ; i < fin ; i++) {
 			if (i >= listeNoeudsAffiches.length)
-				return;
+				return fonctionRetour ? setTimeout(function () { fonctionRetour(); }, 200) : null;
 			if (action == "afficher") {
 				listeNoeudsAffiches[i].getHtml(true).hide();
 				listeNoeudsAffiches[i].getHtml(true).show({ effect: effet, easing: "linear", duration: 200, complete: i == fin - 1 && fonctionRetour ? fonctionRetour : null });
@@ -202,19 +214,24 @@ console.timeEnd("aff");
 	function initialiser() {
 		creerSourceDeDonnees(proprietes.sourceDeDonnees);
 		nbEltAffichables = definirNombreElementsAffichables(sdd.getElements(null), 0);
+		$conteneur.addClass("ox-arbre");
 		var largeurConteneur = $conteneur.width();
 
 		$conteneur.OxDefilement({ hauteurContenu: nbEltAffichables * getHauteurElement(), largeurContenu: largeurConteneur,
 			deplacementBoutonY: function (position, orgEvt) {
 				if (orgEvt == "utilisateur") {
 					var pos = Math.round((nbEltAffichables - nbEltAffiches / 2) * position);
+			//		decalageTempAff.actif = false;
 					afficher(pos);
 				}
 			},
 			deplacementBoutonX: function (position, orgEvt) {
 				if (orgEvt == "utilisateur") {
 					var pos = Math.round((OxNoeud.prototype.longueur - objDefilement.getLargeurContenu()) * position);
-					$(".oxTitre").css("textIndent", pos * -1);
+					//$(".oxTitre").css("textIndent", pos * -1);
+					$(".oxNoeud").each(function () {
+                        this.style.marginLeft = this.donnees.OxNumeroParente * 20 - pos + "px";
+					});
 				}
 			}
 		});
@@ -269,6 +286,22 @@ console.timeEnd("aff");
 		}, 100);
 	}
 
+	function cadrerAffichage (donneesNoeudParent, nbElements) {
+		var positionDernierElement = instance.getIndexParmiEltsAffiches(donneesNoeudParent) + nbElements;
+		var positionDernierElementAffichable = nbEltAffiches / 2;
+		if (positionDernierElement >= positionDernierElementAffichable)
+			if (nbElements > nbEltAffiches / 2) {
+				positionVue = instance.getIndexDansArborescence(donneesNoeudParent);						// on affiche le parent en début d'affichage
+				decalageTempAff.indexDebut = 1;
+			}
+			else {																							// sinon le dernier fils en fin d'affichage
+				positionVue += positionDernierElement - positionDernierElementAffichable + 1;				// +1 pour que le dernier elt ne soit pas tronqué
+				decalageTempAff.indexDebut -= positionDernierElement - positionDernierElementAffichable + 1;
+			}
+		objDefilement.setHauteurContenu(nbEltAffichables * getHauteurElement());
+		objDefilement.setPositionYContenu(positionVue / ((nbEltAffichables - nbEltAffiches / 2) || 1));
+	}
+
 	this.getConteneur = function () {
 		return $conteneur;
 	}
@@ -286,14 +319,15 @@ console.timeEnd("aff");
 		var pos = 0, compt = 0;
 
 		function parcourirListeFils(listeNoeuds) {
-			var listeAParcourir = listeNoeuds.oxDonneesAffichees ? listeNoeuds.action[listeNoeuds.oxDonneesAffichees].donnees : listeNoeuds;
+            var listeAParcourir = sdd.getElements(listeNoeuds && listeNoeuds[0].OxParent ? listeNoeuds[0].OxParent : null);
+			//var listeAParcourir = listeNoeuds.oxDonneesAffichees ? listeNoeuds.action[listeNoeuds.oxDonneesAffichees].donnees : listeNoeuds;
 			for (var i = 0 ; i < listeAParcourir.length ; i++) {
 				if (listeAParcourir[i] == donneesNoeud)
-					return compt;
-				if (pos > positionVue + nbEltAffiches)
-					break;
-				if (pos >= positionVue && compt < listeNoeudsAffiches.length)
-					compt++;
+					return pos; //return compt;
+				// if (pos > positionVue + nbEltAffiches)
+				// 	break;
+				// if (pos >= positionVue && compt < listeNoeudsAffiches.length)
+				// 	compt++;
 				pos++;
 				if (listeAParcourir[i][FILS] && listeAParcourir[i][ESTDEPLOYE]){
 					var resultat = parcourirListeFils(listeAParcourir[i][FILS]);
@@ -306,6 +340,14 @@ console.timeEnd("aff");
 		if (nbEltAffichables)
 			return parcourirListeFils(sdd.getElements());
 		return -1;					// non trouvé
+	}
+
+	this.getIndexParmiEltsAffiches = function (donneesNoeud) {
+		return instance.getIndexDansArborescence(donneesNoeud) - positionVue;
+	}
+
+	this.getPositionVue = function () {
+		return positionVue;
 	}
 
 	/*
@@ -366,7 +408,7 @@ console.timeEnd("aff");
 			proprietes.selection(donneesNoeud, ancierNoeudSelectionne, (org = arguments.callee.caller) && org.name == "evtSelection" ? "utilisateur" : "systeme");
 	}
 
-	this.cocher = function(donneesNoeud, etat, origine) {
+	this.cocher = function(donneesNoeud, etat, origine = "systeme") {
 		if (instance.getModeDeMultSelection(donneesNoeud) == 0)										// pas de multisélection
 			return;
 
@@ -420,7 +462,7 @@ console.timeEnd("aff");
 			proprietes.elementsCoches(donneesNoeud, origine);
 	}
 
-	this.ouvrirNoeud = function(donneesNoeud, index = -1, nomFonctionAppelante) {					//TODO revoir animation
+	this.ouvrirNoeud = function(donneesNoeud, index = -1, nomFonctionAppelante) {
 		if (typeof proprietes.avantOuvertureNoeud == "function")
 			if (proprietes.avantOuvertureNoeud(donneesNoeud, nomFonctionAppelante == "evtClickEtendeur" ? "utilisateur" : "systeme") == false)
 				return;
@@ -434,14 +476,16 @@ console.timeEnd("aff");
 		var posFinAAnimer = index + nbEltsAAfficher;
 		posFinAAnimer = posFinAAnimer >= nbEltAffiches / 2 ? nbEltAffiches / 2 : posFinAAnimer;
 		index != -1 && animer(index, posFinAAnimer, "afficher", proprietes.nomAnimation);*/
+        nbEltsAAfficher && (decalageTempAff.actif = true);
 		afficherQuandPret(positionVue, index, nbEltsAAfficher, "afficher", proprietes.nomAnimation);
+		cadrerAffichage(donneesNoeud, nbEltsAAfficher);
 		delete donneesNoeud.oxNoeudAAnimer;
 		objDefilement.setHauteurContenu(nbEltAffichables * getHauteurElement());
 		if (typeof proprietes.ouvertureNoeud == "function")
 			proprietes.ouvertureNoeud(donneesNoeud, nomFonctionAppelante == "evtClickEtendeur" ? "utilisateur" : "systeme");
 	}
 
-	this.fermerNoeud = function(donneesNoeud, index = -1, nomFonctionAppelante) {					//TODO revoir animation
+	this.fermerNoeud = function(donneesNoeud, index = -1, nomFonctionAppelante) {
 		if (typeof proprietes.avantFermetureNoeud == "function")
 			if (proprietes.avantFermetureNoeud(donneesNoeud, nomFonctionAppelante == "evtClickEtendeur" ? "utilisateur" : "systeme") == false)
 				return;
@@ -449,11 +493,16 @@ console.timeEnd("aff");
 		var nbEltsAMasquer = getNbEltsAffichables(donneesNoeud[FILS]);
 		nbEltAffichables = donneesNoeud[ESTDEPLOYE] ? nbEltAffichables + nbEltsAMasquer : nbEltAffichables - nbEltsAMasquer;
 		var posFinAAnimer = index + nbEltsAMasquer;
-		posFinAAnimer = posFinAAnimer >= nbEltAffiches / 2 ? nbEltAffiches / 2 : posFinAAnimer;
+	//	posFinAAnimer = posFinAAnimer >= nbEltAffiches / 2 ? nbEltAffiches / 2 : posFinAAnimer;
 		donneesNoeud.oxNoeudAAnimer = true;
 		if (donneesNoeud[FILS].length > 0 && index != -1)
-			animer(index, posFinAAnimer, "masquer", proprietes.nomAnimation, function () { afficher(positionVue); delete donneesNoeud.oxNoeudAAnimer; });
+			animer(index, posFinAAnimer, "masquer", proprietes.nomAnimation, function () {
+			//	decalageTempAff.actif = false;
+				afficher(positionVue);
+				delete donneesNoeud.oxNoeudAAnimer;
+			});
 		else {
+            nbEltsAMasquer && (decalageTempAff.actif = true);
 			afficher(positionVue);
 			delete donneesNoeud.oxNoeudAAnimer;
 		}
@@ -525,7 +574,7 @@ console.timeEnd("aff");
 			}
 		}
 		parcourirListeFils(sdd.getElements());
-		objDefilement.setPositionYContenu(positionVue / (nbEltAffichables - nbEltAffiches / 2));
+		objDefilement.setPositionYContenu(positionVue / ((nbEltAffichables - nbEltAffiches / 2) || 1));
 	}
 
 	this.ajouter = function (donneesNoeud, donneesNoeudParent, indexDestination) {
@@ -534,13 +583,16 @@ console.timeEnd("aff");
 		else if (donneesNoeud[ESTSELECTIONNE])
 			noeudSelectionne = donneesNoeud;
 		sdd.ajouterElement(donneesNoeud, donneesNoeudParent, indexDestination);
+		//cadrerAffichage(donneesNoeudParent, 1);
+
 		if (!donneesNoeudParent || donneesNoeudParent && donneesNoeudParent[ESTDEPLOYE]) {
 			nbEltAffichables++;
 			var nbEltsAAfficher = getNbEltsAffichables(donneesNoeud[FILS]);
 			nbEltAffichables += nbEltsAAfficher;
 			objDefilement.setHauteurContenu(nbEltAffichables * getHauteurElement());
 		}
-		afficherQuandPret(positionVue);
+		//decalageTempAff.remplir(new Date().getTime(), positionVue, instance.getIndexDansArborescence(donneesNoeudParent) + 1, 1);
+		//afficherQuandPret(positionVue);																								// on ne gère pas l'affichage dans cette fonction
 		if (typeof proprietes.ajoutNoeud == "function")
 			proprietes.ajoutNoeud(donneesNoeud);
 	}
@@ -556,13 +608,16 @@ console.timeEnd("aff");
 					i = listeNoeuds.length;
 				}
 		sdd.ajouterElements(listeNoeuds, donneesNoeudParent, indexDestination);
+		//cadrerAffichage(donneesNoeudParent, listeNoeuds.length);
+
 		if (!donneesNoeudParent || donneesNoeudParent && donneesNoeudParent[ESTDEPLOYE]) {
 			nbEltAffichables += listeNoeuds.length;
 			for (var i = 0 ; i < listeNoeuds.length ; i++)
 				nbEltAffichables += getNbEltsAffichables(listeNoeuds[i][FILS]);
 			objDefilement.setHauteurContenu(nbEltAffichables * getHauteurElement());
 		}
-		afficherQuandPret(positionVue);
+		//decalageTempAff.remplir(new Date().getTime(), positionVue, instance.getIndexDansArborescence(donneesNoeudParent) + 1, listeNoeuds.length);
+		//afficherQuandPret(positionVue);
 
 		if (typeof proprietes.ajoutNoeud == "function")
 			proprietes.ajoutNoeud(donneesNoeud);
@@ -583,6 +638,8 @@ console.timeEnd("aff");
 		}
 		objDefilement.setHauteurContenu(nbEltAffichables * getHauteurElement());
 		afficherQuandPret(positionVue);
+	//	decalageTempAff.actif = false;
+
 		if (typeof proprietes.supprimerNoeud == "function")
 			proprietes.supprimerNoeud(donneesNoeud);
 	}
@@ -699,6 +756,7 @@ console.timeEnd("aff");
 		var objNoeud = this;
 
 		var noeud = document.createElement("div");
+        noeud.donnees = donnees;
 		noeud.className = "oxNoeud";
 		var etendeur = document.createElement("div");
 		etendeur.className = "ox-etendeur";
@@ -739,9 +797,12 @@ console.timeEnd("aff");
 			//noeud.className = noeud.className.replace(/ ?ox-estSelectionne/g, '');
 			donnees[ESTSELECTIONNE] && (noeud.className += " ox-estSelectionne");
 			noeud.style.display = "block";
-			noeud.style.marginLeft = donnees.OxNumeroParente * 20 + "px";
+            var pos = Math.round((OxNoeud.prototype.longueur - objDefilement.getLargeurContenu()) * objDefilement.getPositionXContenu());
+			noeud.style.marginLeft = donnees.OxNumeroParente * 20 - pos + "px";
 			donnees[STYLEETENDEUR] && (etendeur.style = donnees[STYLEETENDEUR]);
 			etendeur.style.visibility = donnees[FILS] && Array.isArray(donnees[FILS]) ? "visible" : "hidden";
+			etendeur.className.replace(/ ?ox-estAffiche/g, '')
+			donnees[FILS] && Array.isArray(donnees[FILS]) && (etendeur.className += " ox-estAffiche");
 			//noeud.className = noeud.className.replace(/ ?ox-deploye/g, '');
 			donnees[ESTDEPLOYE] && (noeud.className += " ox-deploye");
 			noeud.draggable = false;
@@ -772,7 +833,7 @@ console.timeEnd("aff");
 			infoEvt.innerHTML = '!';
 			infoEvt.style.display = "none";
 			infoEvt.className = "oxInfoEvt";
-			if (donnees[FILS] && donnees[FILS].oxDonneesAffichees)
+			if (sdd.estDonneesFiltrees(donnees[FILS])/*donnees[FILS] && donnees[FILS].oxDonneesAffichees*/)
 				infoEvt.style.display = "block";
 			if (instance.getModeDeMultSelection(donnees)){
 				objCC.afficher();
@@ -807,7 +868,7 @@ console.timeEnd("aff");
 			titre.innerHTML = donnees[TITRE] || '';
 			donnees[CLASSETEXTE] && (titre.className += ' ' + donnees[CLASSETEXTE]);
 
-			var longueurNoeud = donnees.OxNumeroParente * 20 + donnees[TITRE].length * 8;
+			var longueurNoeud = donnees.OxNumeroParente * 20 + donnees[TITRE].length * 7.6 + 60;
 			if (OxNoeud.prototype.longueur < longueurNoeud) {
 				OxNoeud.prototype.longueur = longueurNoeud;
 				//OxNoeud.prototype.getLongueur = function () { return $titre.get(0).offsetWidth; };						// lent
@@ -819,6 +880,7 @@ console.timeEnd("aff");
 			noeud.removeEventListener("dragover", dragover, false);
 			noeud.removeEventListener("dragend", drop, false);
 			noeud.removeEventListener("click", evtSelection, false);
+			noeud.removeEventListener("dblclick", evtDoubleClick, false);
 			noeud.removeEventListener("contextmenu", evtCliqueDroit, false);
 			titre.removeEventListener("mouseover", titreSurvole, false);
 			titre.removeEventListener("mousemove", titreSourisDeplacee, false);
@@ -839,6 +901,7 @@ console.timeEnd("aff");
 
 		this.setDonnees = function(d) {
 			donnees = d;
+			noeud.donnees = d;
 			appliquerParametres();
 		}
 
@@ -935,6 +998,10 @@ console.timeEnd("aff");
 			if (typeof proprietes.elementClique == "function")
 				proprietes.elementClique(donnees, e);
 		}
+		function evtDoubleClick (e) {
+			if (typeof proprietes.elementDoubleClique == "function")
+				proprietes.elementDoubleClique(donnees, e);
+		}
 		function evtCliqueDroit (e) {
 			if (typeof proprietes.elementCliqueDroit == "function")
 				proprietes.elementCliqueDroit(donnees, e);
@@ -956,6 +1023,7 @@ console.timeEnd("aff");
 		titre.addEventListener("mouseout", titreSourisSort);
 
 		noeud.addEventListener("click", evtSelection);
+		noeud.addEventListener("dblclick", evtDoubleClick);
 		noeud.addEventListener("contextmenu", evtCliqueDroit);
 
 		etendeur.addEventListener("click", evtClickEtendeur);
