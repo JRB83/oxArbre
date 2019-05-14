@@ -191,9 +191,9 @@ console.timeEnd("aff");
 
 	function getHauteurElement() {
 		var elt = new OxNoeud({});
-		$("body").append(elt.getHtml());
-		var hauteur = $("body > .oxNoeud").outerHeight(true);
-		$("body > .oxNoeud").remove();
+		$conteneur.append(elt.getHtml());
+		var hauteur = $conteneur.find(".oxNoeud:last").outerHeight(true);
+		$conteneur.find(".oxNoeud:last").remove();
 		elt.detruire();
 		return hauteur;
 	}
@@ -498,6 +498,10 @@ console.timeEnd("aff");
 		if (donneesNoeud[FILS].length > 0 && index != -1)
 			animer(index, posFinAAnimer, "masquer", proprietes.nomAnimation, function () {
 			//	decalageTempAff.actif = false;
+				if (positionVue + nbEltAffiches / 2 > nbEltAffichables) {
+					positionVue = nbEltAffichables - nbEltAffiches / 2;
+					positionVue = positionVue < 0 ? 0 : positionVue;
+				}
 				afficher(positionVue);
 				delete donneesNoeud.oxNoeudAAnimer;
 			});
@@ -800,8 +804,8 @@ console.timeEnd("aff");
             var pos = Math.round((OxNoeud.prototype.longueur - objDefilement.getLargeurContenu()) * objDefilement.getPositionXContenu());
 			noeud.style.marginLeft = donnees.OxNumeroParente * 20 - pos + "px";
 			donnees[STYLEETENDEUR] && (etendeur.style = donnees[STYLEETENDEUR]);
+			etendeur.className.replace(/ ?ox-estAffiche/g, '');
 			etendeur.style.visibility = donnees[FILS] && Array.isArray(donnees[FILS]) ? "visible" : "hidden";
-			etendeur.className.replace(/ ?ox-estAffiche/g, '')
 			donnees[FILS] && Array.isArray(donnees[FILS]) && (etendeur.className += " ox-estAffiche");
 			//noeud.className = noeud.className.replace(/ ?ox-deploye/g, '');
 			donnees[ESTDEPLOYE] && (noeud.className += " ox-deploye");
@@ -833,11 +837,13 @@ console.timeEnd("aff");
 			infoEvt.innerHTML = '!';
 			infoEvt.style.display = "none";
 			infoEvt.className = "oxInfoEvt";
+			var longueurNoeud = donnees[FILS] && Array.isArray(donnees[FILS]) ? 20 : 0;
 			if (sdd.estDonneesFiltrees(donnees[FILS])/*donnees[FILS] && donnees[FILS].oxDonneesAffichees*/)
 				infoEvt.style.display = "block";
 			if (instance.getModeDeMultSelection(donnees)){
 				objCC.afficher();
 				objCC.modifierEtat(donnees[ESTCOCHE] || 0, false);
+				longueurNoeud += 20;
 				noeud.className += " ox-multiSelectionnable-" + instance.getModeDeMultSelection(donnees);
 				if (instance.getModeDeMultSelection(donnees) == OxArbre.prototype.multiselection.EXCLUSIFAUPARENT) {
 					objCC.changerNom(donnees.OxParent.titre);
@@ -857,18 +863,20 @@ console.timeEnd("aff");
 				img.style.display = "block";
 				img.src = donnees[IMAGE];
 				donnees[CLASSEICONE] && (img.className += ' ' + donnees[CLASSEICONE]);
+				longueurNoeud += 20;
 			}
 			else if (donnees[SVG]) {
 				donnees[STYLEICONE] && (svg.style = donnees[STYLEICONE]);
 				svg.style.display = "block";
 				svg.className += ' ' + donnees[SVG];
 				donnees[CLASSEICONE] && (svg.className += ' ' + donnees[CLASSEICONE]);
+				longueurNoeud += 20;
 			}
 			donnees[STYLETITRE] && (titre.style = donnees[STYLETITRE]);
 			titre.innerHTML = donnees[TITRE] || '';
 			donnees[CLASSETEXTE] && (titre.className += ' ' + donnees[CLASSETEXTE]);
 
-			var longueurNoeud = donnees.OxNumeroParente * 20 + donnees[TITRE].length * 7.6 + 60;
+			longueurNoeud += donnees.OxNumeroParente * 20 + donnees[TITRE].length * 7.6;
 			if (OxNoeud.prototype.longueur < longueurNoeud) {
 				OxNoeud.prototype.longueur = longueurNoeud;
 				//OxNoeud.prototype.getLongueur = function () { return $titre.get(0).offsetWidth; };						// lent

@@ -1,4 +1,4 @@
-document.createStyleSheet = (function() {
+document.creationFeuilleDeStyle = (function() {
 	function createStyleSheet(href) {
 		if(typeof href !== 'undefined') {
 			var element = document.createElement('link');
@@ -35,7 +35,7 @@ document.createStyleSheet = (function() {
 
 function OxDefilement($conteneur, proprietes) {
 	var instance = this;
-	var largeurBarre = 20;
+	var largeurBarre = 16;
 	proprietes = $.extend({}, { hauteurContenu: 200,
 								largeurContenu: 50,
 								postionContenuX: 0,
@@ -63,11 +63,11 @@ function OxDefilement($conteneur, proprietes) {
 	// ajout des styles
 	if (!OxDefilement.prototype.estDejaCree) {
 		OxDefilement.prototype.estDejaCree = true;
-		document.createStyleSheet();
+		document.creationFeuilleDeStyle();
 		var pF = document.styleSheets.length - 1;
 		document.styleSheets[pF].insertRule(".ox-contenu { overflow: hidden; }", 0);
 		document.styleSheets[pF].insertRule(".ox-barreY { position: absolute; width: " + largeurBarre + "px; height: 100%; backgroud-color: gray; background-color: #E0E0E0; right: 0; top: 0; }", 0);
-		document.styleSheets[pF].insertRule(".ox-barreX { position: absolute; width: 100%; height: " + largeurBarre + "px; backgroud-color: gray; background-color: #E0E0E0; bottom: 0; }", 0);
+		document.styleSheets[pF].insertRule(".ox-barreX { position: absolute; width: 100%; height: " + largeurBarre + "px; backgroud-color: gray; background-color: #E0E0E0; left: 0; bottom: 0; }", 0);
 		document.styleSheets[pF].insertRule(".ox-boutonX, .ox-boutonY { width: 20px; height: 20px; background-color: #CDCDCD; min-width: 10px; min-height: 10px; max-width: 100%; max-height: 100%; transition: background-color 0.2s; }", 0);
 		document.styleSheets[pF].insertRule(".ox-boutonX:hover, .ox-boutonY:hover { background-color: #a5a5a5; transition: background-color 0.2s; }", 0);
 		document.styleSheets[pF].insertRule(".ox-masque:not(.ox-nePlusCache) { opacity: 0; transition: opacity 0.5s; }", 0);
