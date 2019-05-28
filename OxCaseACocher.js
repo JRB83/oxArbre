@@ -100,7 +100,7 @@ function OxCaseACocher (element, options) {
 		return sauvegardeDIV ? $(element).parent() : element;
 	}
 
-	this.cocher = function cocher () {
+	this.cocher = function () {
 		element.click();
 	}
 
