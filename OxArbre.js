@@ -136,6 +136,7 @@ console.time("aff");
 		viderArbre();
 		nbEltAffichables && parcourirListeFils(sdd.getElements(null));
 		objDefilement.setLargeurContenu(OxNoeud.prototype.longueur);
+		objDefilement.setPositionXContenu();
 console.timeEnd("aff");
 
 		// gestion de l'animation si besoin
@@ -579,6 +580,7 @@ console.timeEnd("aff");
 		}
 		parcourirListeFils(sdd.getElements());
 		objDefilement.setPositionYContenu(positionVue / ((nbEltAffichables - nbEltAffiches / 2) || 1));
+		objDefilement.setPositionXContenu();
 	}
 
 	this.ajouter = function (donneesNoeud, donneesNoeudParent, indexDestination) {
@@ -801,8 +803,7 @@ console.timeEnd("aff");
 			//noeud.className = noeud.className.replace(/ ?ox-estSelectionne/g, '');
 			donnees[ESTSELECTIONNE] && (noeud.className += " ox-estSelectionne");
 			noeud.style.display = "block";
-            var pos = Math.round((OxNoeud.prototype.longueur - objDefilement.getLargeurContenu()) * objDefilement.getPositionXContenu());
-			noeud.style.marginLeft = donnees.OxNumeroParente * 20 - pos + "px";
+			noeud.style.marginLeft = donnees.OxNumeroParente * 20 + "px";
 			donnees[STYLEETENDEUR] && (etendeur.style = donnees[STYLEETENDEUR]);
 			etendeur.className.replace(/ ?ox-estAffiche/g, '');
 			etendeur.style.visibility = donnees[FILS] && Array.isArray(donnees[FILS]) ? "visible" : "hidden";

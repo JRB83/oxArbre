@@ -221,7 +221,7 @@ function OxDefilement($conteneur, proprietes) {
 	}
 
 	this.setPositionXContenu = function (x, orgEvt) {
-		x = x < 0 ? 0 : x > 1 ? 1 : x;
+		x = x < 0 ? 0 : x > 1 ? 1 : x || positionXContenu;
 		positionXContenu = x;
 		var distanceDeplacement = $barreX.width() - $boutonX.width();
 		$boutonX.css("left", distanceDeplacement * x);
