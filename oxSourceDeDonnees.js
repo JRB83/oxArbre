@@ -433,6 +433,7 @@ function oxSourceDeDonnees (donnees, configuration) {
 		var criteresDeTri = new Array();
 		var listeFiltres = new Array();
 		var objDonneesInitiales;
+		var noeudAFiltrer;
 		var donneesInitiales;														// permet de savoir à quel niveau de la source de données se situe le traitement
 		var derniereAction;
 		var cheminDonneesAffichees;
@@ -505,7 +506,7 @@ function oxSourceDeDonnees (donnees, configuration) {
 			if (criteresDeTri.length)
 				trier(listeFreres, criteresDeTri);
 				//goulag.travailler(configuration.cheminWorker + "OxWorkerTrierDonnees.js", listeFreres, criteresDeTri, gdads.retour);
-            donneesTriees && instance.filtrer(donneesTriees[PARENT]);
+			donneesTriees && instance.filtrer(donneesTriees[PARENT]);
 			avertirObjAppelant(donneesGroupees || donneesFiltrees || donneesTriees || listeFreres);
 		}
 
@@ -545,6 +546,7 @@ function oxSourceDeDonnees (donnees, configuration) {
 			if (!listeFreres)
 				return;
 
+			noeudAFiltrer = donneesATraiter;
 			for (var i = listeFiltres.length - 1 ; i >= 0  ; i--)
 				if (listeFiltres[i].nomProp == nomProp && !critere)
 					listeFiltres.splice(i, 1);
@@ -552,32 +554,32 @@ function oxSourceDeDonnees (donnees, configuration) {
 					listeFiltres[i].critere = critere;
 					critere = '';
 				}
-            if (critere && critere.length)
+			if (critere && critere.length)
 				listeFiltres.push({ nomProp: nomProp, critere: critere, action: "filtre" });
 
 			donneesInitiales = listeFreres;
 			derniereAction = "filtre";
 			var donneesATraiter = listeFreres;
 			if (donneesTriees && listeFreres == donneesInitiales)
-			    donneesATraiter = donneesTriees;
-            donneesFiltrees = new Array();
+				donneesATraiter = donneesTriees;
+			donneesFiltrees = new Array();
 			for (var i = 0 ; i < listeFiltres.length ; i++) /*for (var nP in listeFiltres[i]) */{
-                var regexp = new RegExp(listeFiltres[i].critere, "gi");
-                donneesFiltrees = new Array();
-                donneesATraiter.filter(function (obj) {
+				var regexp = new RegExp(listeFiltres[i].critere, "gi");
+				donneesFiltrees = new Array();
+				donneesATraiter.filter(function (obj) {
 					if (typeof obj[listeFiltres[i].nomProp] == "undefined")
 						throw("propriété " + listeFiltres[i].nomProp + " absente");
 					var test = obj[listeFiltres[i].nomProp].toString().match(regexp);
 					if (obj[listeFiltres[i].nomProp].constructor.name == "Number" ? obj[listeFiltres[i].nomProp] == listeFiltres[i].critere : test && test.length)
 						donneesFiltrees.push(obj);
 				});
-                donneesATraiter = donneesFiltrees;
+				donneesATraiter = donneesFiltrees;
 			}
-             if (!listeFiltres.length)
-                 donneesFiltrees = null;
+			 if (!listeFiltres.length)
+				 donneesFiltrees = null;
 			if (donneesGroupees) {
-                var structure = gdads.creerStructureDonneesAffichables();
-                donneesGroupees = gdads.genererDonneesAffichables(structure.OxFils);
+				var structure = gdads.creerStructureDonneesAffichables();
+				donneesGroupees = gdads.genererDonneesAffichables(structure.OxFils);
 			}
 			//donneesInitiales.oxDonneesAffichees = donneesGroupees || donneesFiltrees;
 			avertirObjAppelant(donneesGroupees || donneesFiltrees || donneesTriees || listeFreres);
@@ -590,26 +592,26 @@ function oxSourceDeDonnees (donnees, configuration) {
 			//donneesInitiales && delete donneesInitiales.oxDonneesAffichees;
 		}
 
-        this.supprimerElement = function (listeDonnees, elt) {
-            if (instance.estDonneesFiltrees(listeDonnees)) {
-                for (var i = 0; i < donneesFiltrees.length; i++)
-                    if (donneesFiltrees[i] == elt) {
-                        donneesFiltrees.splice(i, 1);
-                        break;
-                    }
-            }
-            if (instance.estDonneesTriees(listeDonnees)) {
-                for (var i = 0; i < donneesTriees.length; i++)
-                    if (donneesTriees[i] == elt) {
-                        donneesTriees.splice(i, 1);
-                        break;
-                    }
-            }
-            if (instance.estDonneesGroupees(listeDonnees)) {
-                var structure = gestionDesActionsDeSubsomption.creerStructureDonneesAffichables();
-                donneesGroupees = gestionDesActionsDeSubsomption.genererDonneesAffichables(structure.OxFils);
-            }
-        }
+		this.supprimerElement = function (listeDonnees, elt) {
+			if (instance.estDonneesFiltrees(listeDonnees)) {
+				for (var i = 0; i < donneesFiltrees.length; i++)
+					if (donneesFiltrees[i] == elt) {
+						donneesFiltrees.splice(i, 1);
+						break;
+					}
+			}
+			if (instance.estDonneesTriees(listeDonnees)) {
+				for (var i = 0; i < donneesTriees.length; i++)
+					if (donneesTriees[i] == elt) {
+						donneesTriees.splice(i, 1);
+						break;
+					}
+			}
+			if (instance.estDonneesGroupees(listeDonnees)) {
+				var structure = gestionDesActionsDeSubsomption.creerStructureDonneesAffichables();
+				donneesGroupees = gestionDesActionsDeSubsomption.genererDonneesAffichables(structure.OxFils);
+			}
+		}
 
 		/*this.retour = function (travail) {
 			if (travail.nbBlocksRecus == goulag.getNbTravailleurs()) {
@@ -635,23 +637,23 @@ function oxSourceDeDonnees (donnees, configuration) {
 				return donnees;
 		}
 
-        instance.estDonneesFiltrees = function (d) {
-            if (d == donneesInitiales)
-                return donneesFiltrees ? true : false;
-            return false;
-        }
+		instance.estDonneesFiltrees = function (d) {
+			if (d == donneesInitiales)
+				return donneesFiltrees ? true : false;
+			return false;
+		}
 
-        instance.estDonneesTriees = function (d) {
-            if (d == donneesInitiales)
-                return donneesTriees ? true : false;
-            return false;
-        }
+		instance.estDonneesTriees = function (d) {
+			if (d == donneesInitiales)
+				return donneesTriees ? true : false;
+			return false;
+		}
 
-        instance.estDonneesGroupees = function (d) {
-            if (d == donneesInitiales)
-                return donneesGroupees ? true : false;
-            return false;
-        }
+		instance.estDonneesGroupees = function (d) {
+			if (d == donneesInitiales)
+				return donneesGroupees ? true : false;
+			return false;
+		}
 
 		instance.getListeActionsDeSubsomption = function () {
 			return criteresDeTri.concat(listeFiltres);

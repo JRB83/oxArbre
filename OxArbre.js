@@ -303,6 +303,18 @@ console.timeEnd("aff");
 		objDefilement.setPositionYContenu(positionVue / ((nbEltAffichables - nbEltAffiches / 2) || 1));
 	}
 
+	function reajustementApresFiltrage(donneesNoeud, NbEltsAvFiltre) {
+		var nbNvEltsAff = sdd.getElements(donneesNoeud).length;
+		var differenceNbElements = nbNvEltsAff - NbEltsAvFiltre;
+		if (differenceNbElements) {
+			nbEltAffichables += differenceNbElements;
+			objDefilement.setHauteurContenu(nbEltAffichables * getHauteurElement());
+			objDefilement.setPositionYContenu(positionVue ? positionVue / (nbEltAffichables - Math.round(nbEltAffiches / 2)) : 0);
+			if (typeof proprietes.filtre == "function")
+				proprietes.filtre(donneesNoeud, texte);
+		}
+	}
+
 	this.getConteneur = function () {
 		return $conteneur;
 	}
@@ -490,6 +502,9 @@ console.timeEnd("aff");
 		if (typeof proprietes.avantFermetureNoeud == "function")
 			if (proprietes.avantFermetureNoeud(donneesNoeud, nomFonctionAppelante == "evtClickEtendeur" ? "utilisateur" : "systeme") == false)
 				return;
+		var nbEltsAff = sdd.getElements(donneesNoeud).length;
+		sdd.reinitialiserSubsomption();
+		reajustementApresFiltrage(donneesNoeud, nbEltsAff);
 		donneesNoeud[ESTDEPLOYE] = false;
 		var nbEltsAMasquer = getNbEltsAffichables(donneesNoeud[FILS]);
 		nbEltAffichables = donneesNoeud[ESTDEPLOYE] ? nbEltAffichables + nbEltsAMasquer : nbEltAffichables - nbEltsAMasquer;
@@ -739,15 +754,7 @@ console.timeEnd("aff");
 			sdd.filtrer(donneesNoeud, TITRE, texte);
 		else
 			sdd.reinitialiserSubsomption();
-		var nbNvEltsAff = sdd.getElements(donneesNoeud).length;
-		var differenceNbElements = nbNvEltsAff - nbEltsAff;
-		if (differenceNbElements) {
-			nbEltAffichables += differenceNbElements;
-			objDefilement.setHauteurContenu(nbEltAffichables * getHauteurElement());
-			objDefilement.setPositionYContenu(positionVue ? positionVue / (nbEltAffichables - Math.round(nbEltAffiches / 2)) : 0);
-			if (typeof proprietes.filtre == "function")
-				proprietes.filtre(donneesNoeud, texte);
-		}
+		reajustementApresFiltrage(donneesNoeud, nbEltsAff);
 	}
 
 	this.detruire = function () {

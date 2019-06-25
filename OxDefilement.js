@@ -271,10 +271,11 @@ function OxDefilement($conteneur, proprietes) {
 	$conteneur.on('wheel', function(e){
 		e.preventDefault();
 		var direction = e.originalEvent.deltaY < 0 ? 'haut' : 'bas';
-		var posY = instance.getPositionYContenu();							// TODO ne pas calculer la position sur le $bouton mais sur une valeur enregistrer dans l'objet
+		var posY = instance.getPositionYContenu();
 		var positionVueY = direction == "bas" ? posY * proprietes.hauteurContenu + $contenu.outerHeight(true) * proprietes.vitesseScroll : posY * proprietes.hauteurContenu - $contenu.outerHeight(true) * proprietes.vitesseScroll;
 
-		instance.setPositionYContenu(positionVueY / proprietes.hauteurContenu);
+		if (proprietes.hauteurContenu > $conteneur.height())
+			instance.setPositionYContenu(positionVueY / proprietes.hauteurContenu);
 	});
 
 	$barreY.on("click", function (e) {
