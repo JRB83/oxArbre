@@ -43,6 +43,7 @@ function OxArbre ($conteneur, proprietes) {
 	var listeNoeudsAffiches = new Array();
 	var positionVue = 0;						// numéro du premier élément affiché parmi nbEltAffichables;
 	var infoBulle;
+	var optimisationNoeudADeplacer;
 	var decalageTempAff = {
 		delaiRafPosVue: 0,
 		deportTempAff: null,
@@ -938,10 +939,13 @@ console.timeEnd("aff");
 			var posSourisParRapportAuMilieuDeLelement = $(this).offset().top + $(this).outerHeight(true) / 2 - e.pageY;
 			transfertNoeud.noeudDeFinDeDeplacement = objNoeud || transfertNoeud.noeudDeFinDeDeplacement;					// à cause du noeud temporaire
 			transfertNoeud.indexNouvellePosition = sdd.getIndex(objNoeud.getDonnees()) + (posSourisParRapportAuMilieuDeLelement > 0 ? 0 : 1);
-			if ($(this).hasClass("noeudTemporaire"))
-				return;
-			OxNoeud.prototype.noeudTemporaire.remove();
 
+			if ($(this).hasClass("noeudTemporaire") || optimisationNoeudADeplacer == this)								// si pas de changement on sort
+				return;
+
+			optimisationNoeudADeplacer = this;
+			OxNoeud.prototype.noeudTemporaire.remove();
+			console.log(sdd.getIndex(objNoeud.getDonnees()), transfertNoeud.indexNouvellePosition, posSourisParRapportAuMilieuDeLelement)
 			if (transfertNoeud.noeudEnCoursDeDeplacement.getDonnees().OxParent == transfertNoeud.noeudDeFinDeDeplacement.getDonnees().OxParent ||
 					!glisserRestreintAuNoeud(transfertNoeud.noeudEnCoursDeDeplacement.getDonnees()) &&
 					!deposerRestreintAuNoeud(transfertNoeud.noeudDeFinDeDeplacement.getDonnees()))
