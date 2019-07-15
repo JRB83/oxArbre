@@ -813,7 +813,7 @@ console.timeEnd("aff");
 			noeud.style.display = "block";
 			noeud.style.marginLeft = donnees.OxNumeroParente * 20 + "px";
 			donnees[STYLEETENDEUR] && (etendeur.style = donnees[STYLEETENDEUR]);
-			etendeur.className.replace(/ ?ox-estAffiche/g, '');
+			etendeur.className = etendeur.className.replace(/ ?ox-estAffiche/g, '');
 			etendeur.style.visibility = donnees[FILS] && Array.isArray(donnees[FILS]) ? "visible" : "hidden";
 			donnees[FILS] && Array.isArray(donnees[FILS]) && (etendeur.className += " ox-estAffiche");
 			//noeud.className = noeud.className.replace(/ ?ox-deploye/g, '');
