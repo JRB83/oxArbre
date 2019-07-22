@@ -304,9 +304,7 @@ console.timeEnd("aff");
 		objDefilement.setPositionYContenu(positionVue / ((nbEltAffichables - nbEltAffiches / 2) || 1));
 	}
 
-	function reajustementApresFiltrage(donneesNoeud, NbEltsAvFiltre) {
-		var nbNvEltsAff = sdd.getElements(donneesNoeud).length;
-		var differenceNbElements = nbNvEltsAff - NbEltsAvFiltre;
+	function reajustementApresFiltrage(donneesNoeud, differenceNbElements) {
 		if (differenceNbElements) {
 			nbEltAffichables += differenceNbElements;
 			objDefilement.setHauteurContenu(nbEltAffichables * getHauteurElement());
@@ -503,9 +501,8 @@ console.timeEnd("aff");
 		if (typeof proprietes.avantFermetureNoeud == "function")
 			if (proprietes.avantFermetureNoeud(donneesNoeud, nomFonctionAppelante == "evtClickEtendeur" ? "utilisateur" : "systeme") == false)
 				return;
-		var nbEltsAff = sdd.getElements(donneesNoeud).length;
-		sdd.reinitialiserSubsomption();
-		reajustementApresFiltrage(donneesNoeud, nbEltsAff);
+		var diff = sdd.reinitialiserSubsomption();
+		reajustementApresFiltrage(donneesNoeud, diff);
 		donneesNoeud[ESTDEPLOYE] = false;
 		var nbEltsAMasquer = getNbEltsAffichables(donneesNoeud[FILS]);
 		nbEltAffichables = donneesNoeud[ESTDEPLOYE] ? nbEltAffichables + nbEltsAMasquer : nbEltAffichables - nbEltsAMasquer;
@@ -750,12 +747,12 @@ console.timeEnd("aff");
 	 *	passer un texte vide pour supprimer le filtre
 	 */
 	this.filtrer = function (donneesNoeud, texte) {
-		var nbEltsAff = sdd.getElements(donneesNoeud).length;
 		if (texte)
-			sdd.filtrer(donneesNoeud, TITRE, texte);
+			var diff = sdd.filtrer(donneesNoeud, TITRE, texte);
 		else
-			sdd.reinitialiserSubsomption();
-		reajustementApresFiltrage(donneesNoeud, nbEltsAff);
+			var diff = sdd.reinitialiserSubsomption();
+		console.log("diff :", diff)
+		reajustementApresFiltrage(donneesNoeud, diff);
 	}
 
 	this.detruire = function () {

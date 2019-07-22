@@ -560,6 +560,7 @@ function oxSourceDeDonnees (donnees, configuration) {
 			donneesInitiales = listeFreres;
 			derniereAction = "filtre";
 			var donneesATraiter = listeFreres;
+			var nbEltsActuels = donneesGroupees && donneesGroupees.length || donneesFiltrees && donneesFiltrees.length || listeFreres.length;
 			if (donneesTriees && listeFreres == donneesInitiales)
 				donneesATraiter = donneesTriees;
 			donneesFiltrees = new Array();
@@ -583,13 +584,18 @@ function oxSourceDeDonnees (donnees, configuration) {
 			}
 			//donneesInitiales.oxDonneesAffichees = donneesGroupees || donneesFiltrees;
 			avertirObjAppelant(donneesGroupees || donneesFiltrees || donneesTriees || listeFreres);
+
+			return (donneesGroupees && donneesGroupees.length || donneesFiltrees && donneesFiltrees.length) - nbEltsActuels;
 		}
 
 		instance.reinitialiserSubsomption = function () {
+			var difference = donneesInitiales ? donneesInitiales.length - (donneesGroupees && donneesGroupees.length || donneesFiltrees && donneesFiltrees.length || 0) : 0;
 			donneesGroupees = null;
 			donneesFiltrees = null;
 			donneesTriees = null;
 			//donneesInitiales && delete donneesInitiales.oxDonneesAffichees;
+
+			return difference;
 		}
 
 		this.supprimerElement = function (listeDonnees, elt) {
