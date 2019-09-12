@@ -5,17 +5,12 @@
 		<title>test objet défilement</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<style type="text/css">
-			#monArbre,
-			#monArbre2
+			#monArbre
 			{
 				width: 200px;
 				height: 950px;
 				background-color: #EEEEEE;
 				float: left;
-			}
-			#monArbre2
-			{
-				left: 250px;
 			}
 			#listeEltsSelectionnes,
 			#resultat,
@@ -24,13 +19,11 @@
 				width: 400px;
 				height: 200px;
 				background-color: #FFA500; /*88BBFF*/
-				margin-left: 500px;
+				margin-left: 250px;
 				margin-bottom: 20px;
 				overflow: auto;
 				padding-left: 5px;
 			}
-			#listeEltsSelectionnes,
-			#resultat,
 			button
 			{
 				float: left;
@@ -39,22 +32,14 @@
 			{
 				background-color: #FF6347;
 			}
-			#tableau
-			{
-				position: absolute;
-				width: 500px;
-				height: 300px;
-				left: 500px;
-				background-color: lightgray;
-			}
 		</style>
-		<link href="Styles/oxArbre.css" rel="stylesheet" />
-		<link href="Styles/oxTableau.css" rel="stylesheet" />
-		<link href="Styles/OxCaseACocher.css" rel="stylesheet" />
+		<link href="./oxArbre.css" rel="stylesheet" />
+		<link href="./oxTableau.css" rel="stylesheet" />
+		<link href="./OxCaseACocher.css" rel="stylesheet" />
 		<link href="etendeur.css" rel="stylesheet" />
 
-		<script src="../Bibliotheque/js/jquery-2.0.0.js"></script>
-		<script src="../Bibliotheque/js/jquery-ui.1.11.2.js"></script>
+		<script src="./jquery-2.0.0.js"></script>
+		<script src="./jquery-ui.1.11.2.js"></script>
 		<script src="./OxDefilement.js"></script>
 		<script src="./generateurDonnees.js"></script>
 		<script src="./oxSourceDeDonnees.js"></script>
@@ -65,35 +50,38 @@
 	</head>
 	<body>
 		<div id = "monArbre"></div>
-		<div id = "monArbre2"></div>
 		<input type = "text" id = "saisie">
 		<div id = "listeEltsSelectionnes"></div>
-		<button id = "selectionner">Sélectionner</button>
+<!--		<div id = "resultat"></div>-->
+		<div id = "evenement"></div>
+		<button id = "selectionner" style="margin-left: 250px;">Sélectionner</button>
 		<button id = "etendre">Etendre</button>
 		<button id = "fermer">Fermer</button>
 		<button id = "ajouter">Ajouter</button>
 		<button id = "supprimer">Supprimer</button>
 		<button id = "modifier">Modifier</button>
-		<button id = "deplacer">Déplacer</button>
+<!--		<button id = "deplacer">Déplacer</button>-->
 		<button id = "couleurEtendeur">couleur Etendeur</button>
-		<button id = "couleurIcone">couleur Icone</button>
+<!--		<button id = "couleurIcone">couleur Icone</button>-->
 		<button id = "couleurTitre">couleur Titre</button>
 		<button id = "changerTitre">changer Titre</button>
-		<button id = "inverserSelection">inverser sélection</button>
+<!--		<button id = "inverserSelection">inverser sélection</button>-->
 		<button id = "inverserCochable">inverser cochable</button>
+		Filtre :
 		<input type="input" id = "filtre" />
-		<div id = "resultat"></div>
+<!--
 		<button id = "afficherSelectionne">Afficher sélectionné</button>
 		<button id = "afficherCoches">Afficher cochés</button>
+-->
 		<button id = "inverserGlisserDeposable">annuler glisser déposable</button>
-		<div id = "evenement"></div>
 
+<!--
 		<input type="checkbox" name="cc" id = "toto1" />
 		<input type="checkbox" name="cc" id = "toto2" />
 		<input type="checkbox" name="cc" id = "toto3" />
 		<input type="checkbox" name="cc2" id = "toto4" />
 		<input type="checkbox" name="cc2" id = "toto5" />
-		<div id = "tableau"></div>
+-->
 	</body>
 	<script type="text/javascript">
 		$("#listeEltsSelectionnes").on("click", ".eltSelectionne", function () {
@@ -253,14 +241,12 @@
 				$("#evenement").append("Filtre : ", noeud ? noeud.titre : '', ', texte recherché :', texte);
 			}
 		});
-		var arbre2 = new OxArbre($("#monArbre2"), { sourceDeDonnees: sdd3, glisserDeposer: true });
-		$("#toto1").OxCaseACocher({ theme: 6, changement: function () { console.log(arguments); } });
-		$("#toto2").OxCaseACocher({ theme: 7, changement: function () { console.log(arguments); }, estCoche: true });
-		$("#toto3").OxCaseACocher({ mode: OxCaseACocher.prototype.mode.RADIO, theme: 1, changement: function () { console.log(arguments); } });
-		$("#toto4").OxCaseACocher({ mode: OxCaseACocher.prototype.mode.RADIO, theme: 1 });
-		$("#toto5").OxCaseACocher({ mode: OxCaseACocher.prototype.mode.RADIO, theme: 1 });
-		cc = $("#toto1").data('OxCaseACocher');
-		var tableau = new OxTableau($("#tableau"), { sourceDeDonnees: sdd2, selection: { objet: "ligne", methode: "multiple" }, entetes: [{ nom: "Pays", reference: "pays", largeur: "20%" }, { nom: "Ville", reference: "ville" }, { nom: "Entreprise", reference: "entreprise", largeur: 300 }, { nom: "Nom", reference: "nom" }], estRedimensionnable: true });
+//		$("#toto1").OxCaseACocher({ theme: 6, changement: function () { console.log(arguments); } });
+//		$("#toto2").OxCaseACocher({ theme: 7, changement: function () { console.log(arguments); }, estCoche: true });
+//		$("#toto3").OxCaseACocher({ mode: OxCaseACocher.prototype.mode.RADIO, theme: 1, changement: function () { console.log(arguments); } });
+//		$("#toto4").OxCaseACocher({ mode: OxCaseACocher.prototype.mode.RADIO, theme: 1 });
+//		$("#toto5").OxCaseACocher({ mode: OxCaseACocher.prototype.mode.RADIO, theme: 1 });
+//		cc = $("#toto1").data('OxCaseACocher');
 		$("#saisie").OxSaisie({ nbMaxCaracteres: 10, autoCompletion: true, changement: function (valeur) { console.log("changement :", valeur); }, nouveauCaractere: function (valeur) { console.log("nouveauCaractere :", valeur); } });
 		var saisie = $("#saisie").data("OxSaisie");
 		saisie.remplirListeDeValeurs([{ titre: "toto1" }, { titre: "toto2" }, { titre: "toto3" }, { titre: "toto4" }, { titre: "toto5" }, { titre: "toto6" }]);
