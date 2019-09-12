@@ -590,6 +590,7 @@ function oxSourceDeDonnees (donnees, configuration) {
 
 		instance.reinitialiserSubsomption = function () {
 			var difference = donneesInitiales ? donneesInitiales.length - (donneesGroupees && donneesGroupees.length || donneesFiltrees && donneesFiltrees.length || 0) : 0;
+			donneesInitiales = null;
 			donneesGroupees = null;
 			donneesFiltrees = null;
 			donneesTriees = null;

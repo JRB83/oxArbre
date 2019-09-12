@@ -93,6 +93,7 @@
 		<input type="checkbox" name="cc" id = "toto3" />
 		<input type="checkbox" name="cc2" id = "toto4" />
 		<input type="checkbox" name="cc2" id = "toto5" />
+		<div id = "tableau"></div>
 	</body>
 	<script type="text/javascript">
 		$("#listeEltsSelectionnes").on("click", ".eltSelectionne", function () {
@@ -253,16 +254,16 @@
 			}
 		});
 		var arbre2 = new OxArbre($("#monArbre2"), { sourceDeDonnees: sdd3, glisserDeposer: true });
-		$("#toto1").OxCaseACocher({ mode: OxCaseACocher.prototype.mode.RADIO, theme: 1, changement: function () { console.log(arguments); } });
-		$("#toto2").OxCaseACocher({ mode: OxCaseACocher.prototype.mode.RADIO, theme: 1, changement: function () { console.log(arguments); }, estCoche: true });
+		$("#toto1").OxCaseACocher({ theme: 6, changement: function () { console.log(arguments); } });
+		$("#toto2").OxCaseACocher({ theme: 7, changement: function () { console.log(arguments); }, estCoche: true });
 		$("#toto3").OxCaseACocher({ mode: OxCaseACocher.prototype.mode.RADIO, theme: 1, changement: function () { console.log(arguments); } });
 		$("#toto4").OxCaseACocher({ mode: OxCaseACocher.prototype.mode.RADIO, theme: 1 });
 		$("#toto5").OxCaseACocher({ mode: OxCaseACocher.prototype.mode.RADIO, theme: 1 });
 		cc = $("#toto1").data('OxCaseACocher');
-		
+		var tableau = new OxTableau($("#tableau"), { sourceDeDonnees: sdd2, selection: { objet: "ligne", methode: "multiple" }, entetes: [{ nom: "Pays", reference: "pays", largeur: "20%" }, { nom: "Ville", reference: "ville" }, { nom: "Entreprise", reference: "entreprise", largeur: 300 }, { nom: "Nom", reference: "nom" }], estRedimensionnable: true });
 		$("#saisie").OxSaisie({ nbMaxCaracteres: 10, autoCompletion: true, changement: function (valeur) { console.log("changement :", valeur); }, nouveauCaractere: function (valeur) { console.log("nouveauCaractere :", valeur); } });
 		var saisie = $("#saisie").data("OxSaisie");
-		saisie.remplirListeDeValeurs([{ titre: "toto1toto1toto1toto1" }, { titre: "toto2" }, { titre: "toto3" }, { titre: "toto4" }, { titre: "toto5" }, { titre: "toto6" }]);
+		saisie.remplirListeDeValeurs([{ titre: "toto1" }, { titre: "toto2" }, { titre: "toto3" }, { titre: "toto4" }, { titre: "toto5" }, { titre: "toto6" }]);
 		saisie.afficher();
 	</script>
 </html>
