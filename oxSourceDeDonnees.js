@@ -560,7 +560,7 @@ function oxSourceDeDonnees (donnees, configuration) {
 			donneesInitiales = listeFreres;
 			derniereAction = "filtre";
 			var donneesATraiter = listeFreres;
-			var nbEltsActuels = donneesGroupees && donneesGroupees.length || donneesFiltrees && donneesFiltrees.length || listeFreres.length;
+			var nbEltsActuels = donneesGroupees && donneesGroupees.length || donneesFiltrees != null ? donneesFiltrees.length : listeFreres.length;
 			if (donneesTriees && listeFreres == donneesInitiales)
 				donneesATraiter = donneesTriees;
 			donneesFiltrees = new Array();
